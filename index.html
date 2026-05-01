@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Filtro de Usabilidade</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #080c14;
+    --surface:   #0f1624;
+    --surface2:  #141d2e;
+    --border:    rgba(255,255,255,0.07);
+    --amber:     #f59e0b;
+    --amber-dim: rgba(245,158,11,0.12);
+    --green:     #22c55e;
+    --green-dim: rgba(34,197,94,0.12);
+    --red:       #ef4444;
+    --red-dim:   rgba(239,68,68,0.12);
+    --blue:      #3b82f6;
+    --blue-dim:  rgba(59,130,246,0.12);
+    --text:      #e2e8f0;
+    --muted:     #64748b;
+    --radius:    12px;
+    --radius-sm: 8px;
+  }
+
+  html, body { height: 100%; overflow: hidden; }
+
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 14px; }
+
+  body::before {
+    content: ''; position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(245,158,11,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(245,158,11,0.025) 1px, transparent 1px);
+    background-size: 40px 40px; pointer-events: none; z-index: 0;
+  }
+
+  .app {
+    position: relative; z-index: 1; height: 100vh;
+    display: flex; flex-direction: column;
+    padding: 14px 20px; max-width: 980px; margin: 0 auto;
+  }
+
+  /* HEADER */
+  .header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-bottom: 11px; margin-bottom: 11px;
+    border-bottom: 1px solid var(--border); flex-shrink: 0;
+  }
+
+  .logo { display: flex; align-items: center; gap: 10px; }
+
+  .logo-icon {
+    width: 32px; height: 32px; background: var(--amber-dim);
+    border: 1px solid rgba(245,158,11,0.5); border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .logo-icon svg { width: 16px; height: 16px; }
+  .logo h1 { font-family: 'Arial Narrow', 'Impact', Arial, sans-serif; font-size: 1.1rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
+  .logo p  { font-size: 10px; color: var(--muted); letter-spacing: .5px; text-transform: uppercase; }
+
+  .header-actions { display: flex; align-items: center; gap: 8px; }
+
+  .badge-count {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 10px; color: var(--green); background: var(--green-dim);
+    border: 1px solid rgba(34,197,94,0.25); border-radius: 20px; padding: 3px 10px;
+    font-family: 'Courier New', Courier, monospace; font-weight: 700;
+    cursor: pointer; transition: all .15s; user-select: none;
+  }
+
+  .badge-count:hover { background: rgba(34,197,94,.22); border-color: rgba(34,197,94,.5); }
+
+  .badge-count::before {
+    content: ''; width: 5px; height: 5px; border-radius: 50%;
+    background: var(--green); animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+  .btn-hdr {
+    display: flex; align-items: center; gap: 5px;
+    border: 1px solid var(--border); color: var(--muted);
+    font-size: 11px; font-weight: 600; padding: 5px 12px; border-radius: var(--radius-sm);
+    cursor: pointer; font-family: 'Segoe UI', system-ui, sans-serif; transition: all .15s; white-space: nowrap;
+    background: var(--surface2);
+  }
+
+  .btn-hdr:hover { color: var(--text); border-color: rgba(255,255,255,.2); }
+  .btn-hdr.green { color: var(--green); border-color: rgba(34,197,94,.35); background: var(--green-dim); }
+  .btn-hdr.green:hover { background: rgba(34,197,94,.2); }
+  .btn-hdr.blue  { color: var(--blue);  border-color: rgba(59,130,246,.35); background: var(--blue-dim); }
+  .btn-hdr.blue:hover  { background: rgba(59,130,246,.2); }
+
+  /* MAIN */
+  .main { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; overflow: hidden; }
+
+  .col { display: flex; flex-direction: column; min-height: 0; gap: 12px; }
+
+  /* PANEL */
+  .panel {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); display: flex; flex-direction: column;
+    min-height: 0; overflow: hidden;
+  }
+
+  .panel-header {
+    padding: 9px 13px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+  }
+
+  .panel-title { font-family: 'Arial Narrow', 'Impact', Arial, sans-serif; font-size: .75rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); }
+
+  .panel-body   { padding: 13px; }
+  .panel-scroll { padding: 13px; overflow-y: auto; flex: 1; min-height: 0; }
+
+  .field-label { font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; display: block; }
+
+  /* PLATE INPUT */
+  .plate-row {
+    display: flex; align-items: center; background: var(--surface2);
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    overflow: hidden; margin-bottom: 10px; transition: border-color .2s;
+  }
+
+  .plate-row:focus-within { border-color: var(--amber); }
+
+  .plate-flag { width: 36px; height: 36px; background: var(--amber-dim); border-right: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+
+  #placa { flex: 1; background: transparent; border: none; color: var(--text); font-family: 'Courier New', Courier, monospace; font-size: 1rem; font-weight: 700; letter-spacing: 4px; padding: 8px 11px; outline: none; text-transform: uppercase; }
+  #placa::placeholder { color: var(--muted); letter-spacing: 2px; font-size: .8rem; font-weight: 400; }
+
+  .plate-dot { width: 7px; height: 7px; border-radius: 50%; margin-right: 11px; flex-shrink: 0; transition: background .2s; }
+  .plate-dot.valid   { background: var(--green); box-shadow: 0 0 5px rgba(34,197,94,.5); }
+  .plate-dot.invalid { background: var(--red); }
+
+  /* SERVICE GRID */
+  .svc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 10px; }
+
+  .svc-btn { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 7px 4px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; transition: all .15s; color: var(--muted); }
+  .svc-btn:hover  { border-color: rgba(245,158,11,.4); color: var(--text); background: var(--amber-dim); }
+  .svc-btn.active { border-color: var(--amber); background: var(--amber-dim); color: var(--amber); }
+  .svc-icon { font-size: 15px; }
+  .svc-name { font-size: 9px; font-weight: 700; text-transform: uppercase; text-align: center; line-height: 1.2; }
+
+  /* CADASTRO BOX */
+  .cbox { background: var(--surface2); border: 1px solid rgba(34,197,94,.2); border-radius: var(--radius-sm); padding: 11px; margin-bottom: 10px; display: none; }
+  .cbox.show { display: block; animation: slideDown .2s ease; }
+  @keyframes slideDown { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:translateY(0)} }
+
+  .nova-badge { display: inline-flex; align-items: center; gap: 5px; background: var(--green-dim); border: 1px solid rgba(34,197,94,.3); color: var(--green); font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 3px 9px; border-radius: 20px; margin-bottom: 9px; }
+
+  .sel-row { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 7px; }
+  .fgroup  { display: flex; flex-direction: column; gap: 3px; }
+  .fgroup label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .8px; color: var(--muted); }
+
+  select { background: var(--surface); border: 1px solid var(--border); color: var(--text); border-radius: var(--radius-sm); padding: 7px 26px 7px 9px; font-family: 'Segoe UI', system-ui, sans-serif; font-size: 12px; cursor: pointer; outline: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2364748b' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; transition: border-color .2s; }
+  select:focus { border-color: var(--amber); }
+
+  input[type="date"] { background: var(--surface); border: 1px solid var(--border); color: var(--text); border-radius: var(--radius-sm); padding: 7px 9px; font-family: 'Segoe UI', system-ui, sans-serif; font-size: 12px; outline: none; width: 100%; transition: border-color .2s; color-scheme: dark; }
+  input[type="date"]:focus { border-color: var(--amber); }
+
+  /* BUTTONS */
+  .btn { width: 100%; padding: 10px; border: none; border-radius: var(--radius-sm); font-family: 'Arial Narrow', 'Impact', Arial, sans-serif; font-size: .9rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all .15s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+  .btn:active   { transform: scale(.98); }
+  .btn-primary  { background: var(--amber); color: #0c0a00; }
+  .btn-primary:hover { background: #fbbf24; }
+  .btn-success  { background: var(--green); color: #000; margin-top: 5px; }
+  .btn-success:hover { background: #4ade80; }
+  .btn-danger   { background: var(--red); color: #fff; }
+  .btn-danger:hover  { background: #f87171; }
+
+  .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--muted); font-size: 10px; padding: 3px 9px; border-radius: var(--radius-sm); cursor: pointer; font-family: 'Segoe UI', system-ui, sans-serif; transition: all .15s; width: auto; font-weight: 600; }
+  .btn-ghost:hover { color: var(--text); border-color: rgba(255,255,255,.2); }
+
+  /* RESULT */
+  #resultado { flex-shrink: 0; }
+
+  .result-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; animation: fadeUp .25s ease; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+  .rcard-head { padding: 9px 13px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+  .sdot   { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .rplate { font-family: 'Courier New', Courier, monospace; font-size: 1rem; font-weight: 700; letter-spacing: 4px; }
+  .rplan  { margin-left: auto; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 2px 8px; border-radius: 20px; }
+
+  .rcard-body { padding: 11px 13px; }
+  .rmeta { display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; margin-bottom: 9px; }
+  .mitem { background: var(--surface2); border-radius: var(--radius-sm); padding: 6px 9px; }
+  .mlabel { font-size: 9px; text-transform: uppercase; letter-spacing: .8px; color: var(--muted); margin-bottom: 2px; }
+  .mval   { font-size: 13px; font-weight: 600; }
+
+  .prog-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+  .prog-label span:last-child { font-weight: 700; color: var(--text); }
+  .prog-track { height: 5px; background: var(--surface2); border-radius: 4px; overflow: hidden; }
+  .prog-fill  { height: 100%; border-radius: 4px; transition: width .55s cubic-bezier(.4,0,.2,1); }
+
+  .alert-strip { display: flex; align-items: center; gap: 7px; padding: 7px 11px; border-radius: var(--radius-sm); margin-top: 8px; font-size: 11px; font-weight: 600; }
+
+  /* COUNTDOWN */
+  .countdown-block { margin-top: 9px; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 9px 12px; }
+  .cd-label { font-size: 9px; text-transform: uppercase; letter-spacing: .8px; color: var(--muted); margin-bottom: 5px; }
+  .cd-segs  { display: flex; gap: 6px; align-items: flex-end; }
+  .cd-unit  { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+  .cd-val   { font-family: 'Courier New', Courier, monospace; font-size: 1.1rem; font-weight: 700; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 3px 8px; min-width: 38px; text-align: center; line-height: 1.3; }
+  .cd-unit-lbl { font-size: 8px; text-transform: uppercase; color: var(--muted); letter-spacing: .5px; }
+  .cd-sep  { font-size: 1rem; color: var(--muted); padding-bottom: 10px; font-family: 'Courier New', Courier, monospace; }
+  .cd-val.urgent { color: var(--red); border-color: rgba(239,68,68,.3); animation: blink 1s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.5} }
+
+  /* YEAR-END BANNER */
+  .yearend-banner { background: rgba(239,68,68,.08); border: 1px solid rgba(239,68,68,.3); border-radius: var(--radius-sm); padding: 11px 13px; margin-top: 9px; display: flex; flex-direction: column; gap: 8px; }
+  .yearend-title { font-size: 12px; font-weight: 700; color: var(--red); display: flex; align-items: center; gap: 6px; }
+  .yearend-desc  { font-size: 11px; color: var(--muted); line-height: 1.5; }
+
+  /* HISTORY */
+  .hist-list { display: flex; flex-direction: column; gap: 5px; }
+  .hist-item { display: flex; align-items: center; gap: 8px; padding: 7px 10px; background: var(--surface2); border-radius: var(--radius-sm); border: 1px solid var(--border); }
+  .hplate { font-family: 'Courier New', Courier, monospace; font-size: 11px; font-weight: 700; letter-spacing: 2px; min-width: 70px; }
+  .hsvc   { font-size: 10px; background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(245,158,11,.2); padding: 2px 7px; border-radius: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
+  .htime  { margin-left: auto; font-size: 10px; color: var(--muted); font-family: 'Courier New', Courier, monospace; }
+  .empty  { text-align: center; padding: 2rem; color: var(--muted); font-size: 12px; }
+
+  /* MODAL */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.78); display: flex; align-items: center; justify-content: center; z-index: 1000; animation: fadeIn .2s ease; }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+  .modal { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); width: 600px; max-width: 96vw; max-height: 90vh; display: flex; flex-direction: column; animation: scaleIn .2s ease; }
+  @keyframes scaleIn { from{opacity:0;transform:scale(.96)} to{opacity:1;transform:scale(1)} }
+
+  .modal-header { padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+  .modal-title  { font-family: 'Arial Narrow', 'Impact', Arial, sans-serif; font-size: 1rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
+  .modal-close  { background: none; border: none; color: var(--muted); font-size: 1.2rem; cursor: pointer; padding: 2px 6px; border-radius: 4px; }
+  .modal-close:hover { color: var(--text); background: var(--surface2); }
+  .modal-body   { padding: 18px; overflow-y: auto; flex: 1; }
+
+  /* DROP ZONE */
+  .drop-zone { border: 2px dashed var(--border); border-radius: var(--radius-sm); padding: 32px; text-align: center; cursor: pointer; transition: all .2s; position: relative; }
+  .drop-zone:hover, .drop-zone.drag { border-color: var(--green); background: var(--green-dim); }
+  .drop-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+  .drop-icon  { font-size: 2.2rem; margin-bottom: 8px; }
+  .drop-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .drop-sub   { font-size: 11px; color: var(--muted); }
+
+  /* MAPPING INFO */
+  .map-section { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 13px 15px; margin-top: 14px; }
+  .map-section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 10px; }
+
+  .map-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .map-item { background: var(--surface); border-radius: var(--radius-sm); padding: 6px 10px; display: flex; align-items: center; gap: 6px; font-size: 11px; }
+  .map-from { font-family: 'Courier New', Courier, monospace; color: var(--amber); font-size: 10px; flex: 1; }
+  .map-arr  { color: var(--muted); font-size: 10px; }
+  .map-to   { color: var(--green); font-weight: 700; font-size: 10px; }
+
+  /* IMPORT OPTIONS */
+  .import-opts { display: flex; gap: 16px; margin: 14px 0 0; align-items: center; }
+  .import-opts label { display: flex; align-items: center; gap: 6px; font-size: 12px; cursor: pointer; }
+
+  /* IMPORT RESULT */
+  .import-result { background: var(--surface2); border-radius: var(--radius-sm); padding: 13px 15px; margin-top: 14px; display: none; }
+  .import-result.show { display: block; animation: fadeUp .2s ease; }
+
+  .imp-stats  { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 10px; }
+  .imp-stat   { background: var(--surface); border-radius: var(--radius-sm); padding: 8px 10px; text-align: center; }
+  .imp-stat-n { font-family: 'Courier New', Courier, monospace; font-size: 1.25rem; font-weight: 700; }
+  .imp-stat-l { font-size: 9px; text-transform: uppercase; letter-spacing: .8px; color: var(--muted); margin-top: 2px; }
+
+  .imp-warn-list { max-height: 80px; overflow-y: auto; margin-top: 6px; }
+  .imp-warn-row  { font-size: 11px; color: var(--amber); padding: 3px 0; border-bottom: 1px solid var(--border); font-family: 'Courier New', Courier, monospace; }
+  .imp-err-row   { font-size: 11px; color: var(--red); padding: 3px 0; border-bottom: 1px solid var(--border); font-family: 'Courier New', Courier, monospace; }
+
+  .imp-section-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin: 8px 0 4px; font-weight: 700; }
+
+  /* PLATES LIST MODAL */
+  .lista-toolbar {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 12px; flex-shrink: 0;
+  }
+
+  .lista-search {
+    flex: 1; background: var(--surface2); border: 1px solid var(--border);
+    color: var(--text); border-radius: var(--radius-sm);
+    padding: 7px 12px; font-family: 'Segoe UI', system-ui, sans-serif; font-size: 13px;
+    outline: none; transition: border-color .2s;
+  }
+
+  .lista-search:focus { border-color: var(--amber); }
+  .lista-search::placeholder { color: var(--muted); }
+
+  .lista-count-label { font-size: 11px; color: var(--muted); white-space: nowrap; font-family: 'Courier New', Courier, monospace; }
+
+  .lista-table-wrap { overflow-y: auto; flex: 1; min-height: 0; }
+
+  .lista-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+
+  .lista-table thead tr { position: sticky; top: 0; z-index: 2; }
+
+  .lista-table th {
+    padding: 7px 10px; text-align: left;
+    font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+    color: var(--muted); background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .lista-table th:last-child { text-align: center; }
+
+  .lista-table td {
+    padding: 8px 10px; border-bottom: 1px solid rgba(255,255,255,.03);
+    vertical-align: middle;
+  }
+
+  .lista-table tr:hover td { background: rgba(255,255,255,.02); }
+  .lista-table tr:last-child td { border-bottom: none; }
+
+  .td-placa { font-family: 'Courier New', Courier, monospace; font-weight: 700; letter-spacing: 2px; font-size: 12px; }
+
+  .td-plan-badge { display: inline-block; font-size: 9px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; padding: 2px 7px; border-radius: 20px; }
+
+  .td-tipo  { font-size: 11px; color: var(--muted); }
+  .td-ativ  { font-family: 'Courier New', Courier, monospace; font-size: 10px; color: var(--muted); }
+
+  .td-cycle { text-align: center; }
+
+  .cycle-ok  { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 4px rgba(34,197,94,.5); }
+  .cycle-exp { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--red); box-shadow: 0 0 4px rgba(239,68,68,.5); animation: blink 1.2s infinite; }
+
+  .td-actions { display: flex; align-items: center; gap: 4px; justify-content: flex-end; }
+
+  .act-btn {
+    display: flex; align-items: center; gap: 4px;
+    font-size: 10px; font-weight: 700; padding: 4px 9px;
+    border-radius: var(--radius-sm); border: 1px solid var(--border);
+    cursor: pointer; font-family: 'Segoe UI', system-ui, sans-serif;
+    transition: all .15s; white-space: nowrap; background: transparent;
+  }
+
+  .act-btn.edit   { color: var(--amber); border-color: rgba(245,158,11,.3); }
+  .act-btn.edit:hover { background: var(--amber-dim); }
+  .act-btn.view   { color: var(--blue);  border-color: rgba(59,130,246,.3); }
+  .act-btn.view:hover { background: var(--blue-dim); }
+  .act-btn.del    { color: var(--red);   border-color: rgba(239,68,68,.3); }
+  .act-btn.del:hover  { background: var(--red-dim); }
+
+  /* INLINE EDIT ROW */
+  .edit-row td {
+    background: rgba(245,158,11,.05) !important;
+    border-top: 1px solid rgba(245,158,11,.2);
+    border-bottom: 1px solid rgba(245,158,11,.2);
+  }
+
+  .edit-fields { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+
+  .edit-fields select, .edit-fields input[type="date"] {
+    font-size: 11px; padding: 5px 8px; background: var(--surface2); flex-shrink: 0;
+  }
+
+  .edit-fields input[type="date"] { width: 130px; }
+
+  .act-btn.save { color: var(--green); border-color: rgba(34,197,94,.3); }
+  .act-btn.save:hover { background: var(--green-dim); }
+  .act-btn.cancel-edit { color: var(--muted); }
+  .act-btn.cancel-edit:hover { background: var(--surface2); color: var(--text); }
+
+  .lista-empty { text-align: center; padding: 3rem; color: var(--muted); font-size: 13px; }
+
+  /* CONSULT MODAL */
+  .consult-plate-header {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 10px 14px; margin-bottom: 14px;
+  }
+  .consult-plate-val  { font-family: 'Courier New', Courier, monospace; font-size: 1.1rem; font-weight: 700; letter-spacing: 4px; }
+  .consult-info-col   { display: flex; flex-direction: column; gap: 2px; font-size: 11px; color: var(--muted); }
+  .consult-info-col strong { color: var(--text); font-weight: 700; }
+  .consult-clear-all  { margin-left: auto; background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.3); color: var(--red); font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: var(--radius-sm); cursor: pointer; font-family: 'Segoe UI', system-ui, sans-serif; transition: all .15s; white-space: nowrap; }
+  .consult-clear-all:hover { background: rgba(239,68,68,.22); }
+
+  .svc-block { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 7px; overflow: hidden; }
+  .svc-block-hd { display: flex; align-items: center; gap: 8px; padding: 9px 12px; cursor: pointer; user-select: none; transition: background .15s; }
+  .svc-block-hd:hover { background: rgba(255,255,255,.03); }
+  .svc-block-icon { font-size: 16px; flex-shrink: 0; }
+  .svc-block-name { font-weight: 700; font-size: 13px; flex: 1; }
+  .svc-block-count { font-family: 'Courier New', Courier, monospace; font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 20px; }
+  .svc-block-clear { background: transparent; border: 1px solid rgba(239,68,68,.3); color: var(--red); font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: var(--radius-sm); cursor: pointer; font-family: 'Segoe UI', system-ui, sans-serif; transition: all .15s; }
+  .svc-block-clear:hover { background: rgba(239,68,68,.15); }
+  .svc-chev { color: var(--muted); font-size: 10px; transition: transform .2s; margin-left: 4px; }
+  .svc-block.open .svc-chev { transform: rotate(180deg); }
+
+  .svc-entries { display: none; padding: 0 8px 8px; flex-direction: column; gap: 5px; }
+  .svc-block.open .svc-entries { display: flex; }
+
+  .svc-entry { display: flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 7px 10px; }
+  .entry-num  { font-family: 'Courier New', Courier, monospace; font-size: 10px; color: var(--muted); min-width: 18px; text-align: right; }
+  .entry-date { font-family: 'Courier New', Courier, monospace; font-size: 11px; color: var(--text); flex: 1; }
+  .entry-cycle { font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 20px; text-transform: uppercase; letter-spacing: .5px; flex-shrink: 0; }
+  .entry-del  { background: transparent; border: none; color: var(--muted); cursor: pointer; font-size: 14px; padding: 2px 5px; border-radius: 4px; transition: all .15s; line-height: 1; flex-shrink: 0; }
+  .entry-del:hover { color: var(--red); background: rgba(239,68,68,.12); }
+  .svc-no-entries { font-size: 11px; color: var(--muted); text-align: center; padding: 10px; }
+
+  /* TOAST */
+  .toasts { position: fixed; bottom: 16px; right: 16px; display: flex; flex-direction: column; gap: 6px; z-index: 9999; }
+  .toast { display: flex; align-items: center; gap: 8px; padding: 9px 13px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 600; min-width: 210px; max-width: 300px; animation: slIn .22s ease; box-shadow: 0 6px 20px rgba(0,0,0,.4); }
+  @keyframes slIn  { from{opacity:0;transform:translateX(14px)} to{opacity:1;transform:translateX(0)} }
+  .toast.out { animation: slOut .22s ease forwards; }
+  @keyframes slOut { to{opacity:0;transform:translateX(14px)} }
+  .toast-success { background: var(--green-dim); border:1px solid rgba(34,197,94,.3); color: var(--green); }
+  .toast-danger  { background: var(--red-dim);   border:1px solid rgba(239,68,68,.3);  color: var(--red); }
+  .toast-warning { background: var(--amber-dim); border:1px solid rgba(245,158,11,.3); color: var(--amber); }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+      </div>
+      <div>
+        <h1>Filtro de Usabilidade</h1>
+        <p>Central de Atendimentos</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn-hdr green" onclick="abrirImport()">⬆ Importar Base</button>
+      <button class="btn-hdr blue"  onclick="exportarCSV()">⬇ Exportar CSV</button>
+      <span class="badge-count" id="badgePlacas" onclick="abrirListaPlacas()" title="Ver todas as placas">0 placas</span>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- LEFT -->
+    <div class="col">
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Registrar Atendimento</span>
+          <span style="font-size:10px;color:var(--muted)">Enter para registrar</span>
+        </div>
+        <div class="panel-body">
+
+          <label class="field-label">Placa do Veículo</label>
+          <div class="plate-row">
+            <div class="plate-flag">🇧🇷</div>
+            <input id="placa" maxlength="7" placeholder="ABC1234" autocomplete="off"
+              oninput="onPlacaInput()" onkeydown="if(event.key==='Enter')processar()">
+            <div class="plate-dot" id="pdot"></div>
+          </div>
+
+          <label class="field-label">Tipo de Serviço</label>
+          <div class="svc-grid">
+            <button class="svc-btn active" data-s="guincho"     onclick="selSvc(this)"><span class="svc-icon">🏗️</span><span class="svc-name">Guincho</span></button>
+            <button class="svc-btn"        data-s="bateria"     onclick="selSvc(this)"><span class="svc-icon">🔋</span><span class="svc-name">Bateria</span></button>
+            <button class="svc-btn"        data-s="pneu"        onclick="selSvc(this)"><span class="svc-icon">🛞</span><span class="svc-name">Pneu</span></button>
+            <button class="svc-btn"        data-s="combustivel" onclick="selSvc(this)"><span class="svc-icon">⛽</span><span class="svc-name">Combustível</span></button>
+            <button class="svc-btn"        data-s="chaveiro"    onclick="selSvc(this)"><span class="svc-icon">🔑</span><span class="svc-name">Chaveiro</span></button>
+            <button class="svc-btn"        data-s="taxi"        onclick="selSvc(this)"><span class="svc-icon">🚕</span><span class="svc-name">Táxi/Uber</span></button>
+            <button class="svc-btn"        data-s="hospedagem"  onclick="selSvc(this)"><span class="svc-icon">🏨</span><span class="svc-name">Hospedagem</span></button>
+          </div>
+
+          <div class="cbox" id="cbox">
+            <span class="nova-badge">✦ Nova placa detectada</span>
+            <div class="sel-row">
+              <div class="fgroup">
+                <label>Tipo de Veículo</label>
+                <select id="tipo">
+                  <option value="leve">🚗 Leve</option>
+                  <option value="moto">🏍️ Moto</option>
+                  <option value="caminhao">🚛 Caminhão</option>
+                  <option value="utilitario">🚐 Utilitário</option>
+                </select>
+              </div>
+              <div class="fgroup">
+                <label>Plano</label>
+                <select id="plano">
+                  <option value="ouro">⭐ Ouro</option>
+                  <option value="prata">🥈 Prata</option>
+                  <option value="bronze">🥉 Bronze</option>
+                  <option value="unico">🔷 Único</option>
+                </select>
+              </div>
+            </div>
+            <div class="fgroup" style="margin-bottom:7px">
+              <label>📅 Data de Ativação</label>
+              <input type="date" id="dataAtivacao">
+            </div>
+            <button class="btn btn-success" onclick="cadastrar()">✓ Cadastrar Placa</button>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <button class="btn" style="background:var(--surface2);border:1px solid var(--border);color:var(--text)" onclick="consultarPlaca()">🔍 Consultar Placa</button>
+            <button class="btn btn-primary" onclick="processar()">Registrar →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="col">
+      <div id="resultado"></div>
+      <div class="panel" style="flex:1">
+        <div class="panel-header">
+          <span class="panel-title">Histórico Recente</span>
+          <button class="btn-ghost" onclick="limparHist()">Limpar</button>
+        </div>
+        <div class="panel-scroll">
+          <div class="hist-list" id="hlist">
+            <div class="empty">Nenhum atendimento registrado ainda</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL IMPORTAR -->
+<div class="modal-overlay" id="modalOverlay" style="display:none" onclick="fecharModalFora(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">⬆ Importar Base de Placas</span>
+      <button class="modal-close" onclick="fecharModal()">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="drop-zone" id="dropZone"
+        ondragover="event.preventDefault();this.classList.add('drag')"
+        ondragleave="this.classList.remove('drag')"
+        ondrop="onDrop(event)">
+        <input type="file" accept=".xlsx,.xls,.csv,.txt" onchange="onFileSelect(event)">
+        <div class="drop-icon">📊</div>
+        <div class="drop-title">Arraste o arquivo aqui</div>
+        <div style="display:flex;justify-content:center;gap:8px;margin:8px 0 4px">
+          <span style="background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);color:#22c55e;font-size:10px;font-weight:700;padding:2px 9px;border-radius:20px;font-family:'Courier New',Courier,monospace">.xlsx</span>
+          <span style="background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);color:#22c55e;font-size:10px;font-weight:700;padding:2px 9px;border-radius:20px;font-family:'Courier New',Courier,monospace">.xls</span>
+          <span style="background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.3);color:#3b82f6;font-size:10px;font-weight:700;padding:2px 9px;border-radius:20px;font-family:'Courier New',Courier,monospace">.csv</span>
+        </div>
+        <div class="drop-sub">ou clique para selecionar o arquivo</div>
+      </div>
+
+      <!-- MAPEAMENTO VISUAL -->
+      <div class="map-section">
+        <div class="map-section-title">📋 Colunas esperadas no arquivo</div>
+        <div style="font-family:'Courier New',Courier,monospace;font-size:11px;color:var(--green);background:var(--surface);border-radius:var(--radius-sm);padding:8px 11px;margin-bottom:10px;letter-spacing:.5px">
+          Placa &nbsp;|&nbsp; Data de Ativação &nbsp;|&nbsp; Planos &nbsp;|&nbsp; Categorias Carros
+        </div>
+        <div class="map-section-title" style="margin-top:10px">🔄 Mapeamento automático de Planos</div>
+        <div class="map-grid" style="margin-bottom:10px">
+          <div class="map-item"><span class="map-from">1 - Plano Ouro</span><span class="map-arr">→</span><span class="map-to">ouro</span></div>
+          <div class="map-item"><span class="map-from">2 - Plano Prata</span><span class="map-arr">→</span><span class="map-to">prata</span></div>
+          <div class="map-item"><span class="map-from">3 - Plano Bronze</span><span class="map-arr">→</span><span class="map-to">bronze</span></div>
+          <div class="map-item"><span class="map-from">Plano Único</span><span class="map-arr">→</span><span class="map-to">unico</span></div>
+        </div>
+        <div class="map-section-title">🔄 Mapeamento automático de Categorias</div>
+        <div class="map-grid">
+          <div class="map-item"><span class="map-from">LEVES</span><span class="map-arr">→</span><span class="map-to">leve</span></div>
+          <div class="map-item"><span class="map-from">Leves APP / Veículo de Trabalho</span><span class="map-arr">→</span><span class="map-to">leve</span></div>
+          <div class="map-item"><span class="map-from">SUVs | PICKUPs</span><span class="map-arr">→</span><span class="map-to">leve</span></div>
+          <div class="map-item"><span class="map-from">Importados</span><span class="map-arr">→</span><span class="map-to">leve</span></div>
+          <div class="map-item"><span class="map-from">Agregados com Placa</span><span class="map-arr">→</span><span class="map-to">leve</span></div>
+          <div class="map-item"><span class="map-from">Motocicleta</span><span class="map-arr">→</span><span class="map-to">moto</span></div>
+          <div class="map-item"><span class="map-from">Motocicletas Especiais</span><span class="map-arr">→</span><span class="map-to">moto</span></div>
+          <div class="map-item"><span class="map-from">CAMINHAO</span><span class="map-arr">→</span><span class="map-to">caminhao</span></div>
+          <div class="map-item"><span class="map-from">Caminhões - Veículos Especiais</span><span class="map-arr">→</span><span class="map-to">caminhao</span></div>
+          <div class="map-item"><span class="map-from">Utilitário/Motorhome/Foodtruck</span><span class="map-arr">→</span><span class="map-to">utilitario</span></div>
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin-top:8px">⚠ Registros com Data de Ativação em branco ou "-" usarão a data de hoje como padrão.</div>
+      </div>
+
+      <!-- MODO IMPORT -->
+      <div class="import-opts">
+        <label><input type="radio" name="modoImport" value="merge" checked> Mesclar (mantém placas existentes)</label>
+        <label><input type="radio" name="modoImport" value="replace"> Substituir tudo</label>
+      </div>
+
+      <!-- RESULTADO -->
+      <div class="import-result" id="importResult">
+        <div class="imp-stats">
+          <div class="imp-stat"><div class="imp-stat-n" id="impOk"   style="color:var(--green)">0</div><div class="imp-stat-l">Importadas</div></div>
+          <div class="imp-stat"><div class="imp-stat-n" id="impSkip" style="color:var(--muted)">0</div><div class="imp-stat-l">Ignoradas</div></div>
+          <div class="imp-stat"><div class="imp-stat-n" id="impWarn" style="color:var(--amber)">0</div><div class="imp-stat-l">Data padrão</div></div>
+          <div class="imp-stat"><div class="imp-stat-n" id="impErr"  style="color:var(--red)">0</div><div class="imp-stat-l">Erros</div></div>
+        </div>
+        <div id="impWarnList"></div>
+        <div id="impErrList"></div>
+        <button class="btn btn-success" style="margin-top:10px" onclick="fecharModal()">✓ Concluir</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- MODAL LISTA DE PLACAS -->
+<div class="modal-overlay" id="listaOverlay" style="display:none" onclick="fecharListaFora(event)">
+  <div class="modal" style="width:760px;max-height:88vh">
+    <div class="modal-header">
+      <span class="modal-title" id="listaTitle">📋 Base de Placas</span>
+      <button class="modal-close" onclick="fecharLista()">✕</button>
+    </div>
+    <div style="padding:14px 18px 0;flex-shrink:0">
+      <div class="lista-toolbar">
+        <input class="lista-search" id="listaSearch" placeholder="🔍  Buscar placa, plano ou tipo..." oninput="filtrarLista()">
+        <span class="lista-count-label" id="listaCountLabel">—</span>
+      </div>
+    </div>
+    <div class="lista-table-wrap" style="padding:0 18px 16px">
+      <table class="lista-table">
+        <thead>
+          <tr>
+            <th>Placa</th>
+            <th>Tipo</th>
+            <th>Plano</th>
+            <th>Ativação</th>
+            <th>Ciclo</th>
+            <th style="text-align:right">Ações</th>
+          </tr>
+        </thead>
+        <tbody id="listaTbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CONSULTAR PLACA -->
+<div class="modal-overlay" id="consultOverlay" style="display:none" onclick="fecharConsultFora(event)">
+  <div class="modal" style="width:560px">
+    <div class="modal-header">
+      <span class="modal-title" id="consultTitle">🔍 Consulta de Placa</span>
+      <button class="modal-close" onclick="fecharConsult()">✕</button>
+    </div>
+    <div class="modal-body" id="consultBody" style="padding:16px"></div>
+  </div>
+</div>
+
+<div class="toasts" id="toasts"></div>
+
+<script>
+/* ═══════════════════════════════════════════
+   DADOS / CONSTANTES
+═══════════════════════════════════════════ */
+const PLANOS = {
+  leve:       { ouro:{guincho:9,bateria:2,pneu:2,hospedagem:1,combustivel:2,chaveiro:1,taxi:9}, prata:{guincho:6,bateria:2,pneu:2,combustivel:2,chaveiro:1,taxi:6}, bronze:{guincho:3,bateria:1,pneu:1,combustivel:1,chaveiro:1,taxi:3} },
+  moto:       { ouro:{guincho:6,bateria:2,combustivel:2,hospedagem:1,chaveiro:1,taxi:6}, prata:{guincho:3,bateria:2,combustivel:2,chaveiro:1,taxi:3}, bronze:{guincho:2,bateria:1,combustivel:1,chaveiro:1,taxi:2} },
+  caminhao:   { unico:{guincho:4,bateria:2,pneu:2,hospedagem:1,combustivel:2,chaveiro:1,taxi:4}, bronze:{guincho:3,bateria:1,pneu:1,combustivel:1,chaveiro:1,taxi:3} },
+  utilitario: { unico:{guincho:4,bateria:2,pneu:2,hospedagem:1,combustivel:2,chaveiro:1,taxi:4}, bronze:{guincho:3,bateria:1,pneu:1,combustivel:1,chaveiro:1,taxi:3} }
+};
+
+// Mapeamento de planos do relatório → sistema
+const MAP_PLANO = {
+  '1 - plano ouro': 'ouro',
+  '2 - plano prata': 'prata',
+  '3 - plano bronze': 'bronze',
+  'plano único': 'unico',
+  'plano unico': 'unico',
+  'ouro': 'ouro', 'prata': 'prata', 'bronze': 'bronze', 'unico': 'unico', 'único': 'unico'
+};
+
+// Mapeamento de categorias do relatório → tipo do sistema
+const MAP_CATEGORIA = {
+  'leves': 'leve',
+  'leves app / veículo de trabalho': 'leve',
+  'leves app / veiculo de trabalho': 'leve',
+  'suvs | pickups': 'leve',
+  'importados': 'leve',
+  'agregados com placa': 'leve',
+  'motocicleta': 'moto',
+  'motocicletas especiais': 'moto',
+  'caminhao': 'caminhao',
+  'caminhão': 'caminhao',
+  'caminhões - veículos especiais': 'caminhao',
+  'caminhoes - veiculos especiais': 'caminhao',
+  'utilitário/motorhome/foodtruck': 'utilitario',
+  'utilitario/motorhome/foodtruck': 'utilitario',
+  // Fallbacks genéricos
+  'leve': 'leve', 'moto': 'moto', 'utilitario': 'utilitario', 'utilitário': 'utilitario'
+};
+
+const SVC_EM = { guincho:'🏗️', bateria:'🔋', pneu:'🛞', combustivel:'⛽', chaveiro:'🔑', taxi:'🚕', hospedagem:'🏨' };
+const PLANO_COR = { ouro:'#f59e0b', prata:'#94a3b8', bronze:'#b45309', unico:'#3b82f6' };
+
+let placas   = JSON.parse(localStorage.getItem('placas')) || {};
+let hist     = JSON.parse(localStorage.getItem('hist'))   || [];
+let svcAtivo = 'guincho';
+let cdTimer  = null;
+
+document.getElementById('dataAtivacao').valueAsDate = new Date();
+atualizarBadge();
+renderHist();
+
+/* ═══════════════════════════════════════════
+   CICLO DE ATIVAÇÃO
+═══════════════════════════════════════════ */
+function cicloAtual(ativ) {
+  const [ay, am, ad] = ativ.split('-').map(Number);
+  const hoje = new Date(); hoje.setHours(0,0,0,0);
+  let inicio = new Date(hoje.getFullYear(), am - 1, ad);
+  if (inicio > hoje) inicio = new Date(hoje.getFullYear() - 1, am - 1, ad);
+  return { inicio, fim: new Date(inicio.getFullYear() + 1, am - 1, ad) };
+}
+
+function cicloVencido(ativ) { return new Date() >= cicloAtual(ativ).fim; }
+
+function usosNoCiclo(usos, ativ) {
+  const { inicio, fim } = cicloAtual(ativ);
+  return usos.filter(d => { const dt = new Date(d); return dt >= inicio && dt < fim; });
+}
+
+/* ═══════════════════════════════════════════
+   PLACA INPUT
+═══════════════════════════════════════════ */
+function onPlacaInput() {
+  const el = document.getElementById('placa');
+  el.value = el.value.toUpperCase().replace(/[^A-Z0-9]/g,'');
+  const dot = document.getElementById('pdot');
+  if (!el.value.length) { dot.className = 'plate-dot'; return; }
+  const v = validar(el.value);
+  dot.className = 'plate-dot ' + (v ? 'valid' : 'invalid');
+  if (v && placas[el.value]) document.getElementById('cbox').classList.remove('show');
+}
+
+function validar(p) { return /^[A-Z]{3}[0-9][A-Z0-9][0-9]{2}$/.test(p); }
+
+function selSvc(btn) {
+  document.querySelectorAll('.svc-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  svcAtivo = btn.dataset.s;
+}
+
+/* ═══════════════════════════════════════════
+   PROCESSAR / CADASTRAR / REGISTRAR
+═══════════════════════════════════════════ */
+function processar() {
+  const p = document.getElementById('placa').value.trim();
+  if (!p)          { toast('Digite a placa','warning'); return; }
+  if (!validar(p)) { toast('Placa inválida — use ABC1234 ou ABC1D23','danger'); return; }
+  if (!placas[p])  { document.getElementById('cbox').classList.add('show'); return; }
+  registrar(p);
+}
+
+function cadastrar() {
+  const p    = document.getElementById('placa').value.trim();
+  const data = document.getElementById('dataAtivacao').value;
+  if (!validar(p)) { toast('Placa inválida','danger'); return; }
+  if (!data)       { toast('Informe a data de ativação','warning'); return; }
+  const tipo  = document.getElementById('tipo').value;
+  const plano = document.getElementById('plano').value;
+  const disp  = Object.keys(PLANOS[tipo]);
+  placas[p] = { tipo, plano: disp.includes(plano) ? plano : disp[0], ativacao: data, usos: {} };
+  salvar(); atualizarBadge();
+  document.getElementById('cbox').classList.remove('show');
+  toast(`Placa ${p} cadastrada!`, 'success');
+  registrar(p);
+}
+
+function registrar(p) {
+  const d   = placas[p];
+  const svc = svcAtivo;
+
+  if (cicloVencido(d.ativacao)) {
+    toast('Ciclo anual vencido — renove antes de registrar','danger');
+    renderRes(p, d, svc, 0, 0, 'vencido'); return;
+  }
+
+  if (!d.usos[svc]) d.usos[svc] = [];
+  const cicloUsos = usosNoCiclo(d.usos[svc], d.ativacao);
+  const lim       = (PLANOS[d.tipo][d.plano] || {})[svc] || 0;
+  const usados    = cicloUsos.length;
+
+  if (lim === 0)     { toast('Serviço não disponível neste plano','danger');  renderRes(p,d,svc,usados,0,'nd');    return; }
+  if (usados >= lim) { toast('Limite do ciclo atingido','danger');            renderRes(p,d,svc,usados,lim,'lim'); return; }
+
+  d.usos[svc].push(new Date().toISOString());
+  salvar();
+  const total = usados + 1;
+  if      (total === lim)     toast(`Último uso de ${svc}`, 'warning');
+  else if (total === lim - 1) toast(`Penúltimo uso de ${svc}`, 'warning');
+  else                        toast('Atendimento registrado', 'success');
+  addHist(p, svc);
+  renderRes(p, d, svc, total, lim, 'ok');
+}
+
+function renovarAno(p) {
+  const d = placas[p];
+  const [ay,am,ad] = d.ativacao.split('-').map(Number);
+  d.ativacao = new Date(ay + 1, am - 1, ad).toISOString().slice(0,10);
+  for (const s in d.usos) d.usos[s] = [];
+  salvar();
+  toast(`Ano renovado → ${fmtData(d.ativacao)}`, 'success');
+  renderRes(p, d, svcAtivo, 0, (PLANOS[d.tipo][d.plano]||{})[svcAtivo]||0, 'ok');
+  startCountdown(p);
+}
+
+/* ═══════════════════════════════════════════
+   RENDER RESULTADO
+═══════════════════════════════════════════ */
+function renderRes(p, d, svc, total, lim, st) {
+  const rest  = Math.max(0, lim - total);
+  const pct   = lim > 0 ? Math.round((total / lim) * 100) : 100;
+  const cor   = PLANO_COR[d.plano] || '#94a3b8';
+  const pg    = pct >= 100 ? '#ef4444' : pct >= 80 ? '#f59e0b' : '#22c55e';
+  const sc    = ({
+    ok:      { dot:'#22c55e', bg:'rgba(34,197,94,.07)',   br:'rgba(34,197,94,.2)' },
+    lim:     { dot:'#ef4444', bg:'rgba(239,68,68,.07)',   br:'rgba(239,68,68,.2)' },
+    nd:      { dot:'#64748b', bg:'rgba(100,116,139,.07)', br:'rgba(100,116,139,.2)' },
+    vencido: { dot:'#ef4444', bg:'rgba(239,68,68,.07)',   br:'rgba(239,68,68,.4)' }
+  })[st];
+
+  const alerta = st==='lim' ? `<div class="alert-strip" style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#ef4444">⛔ Limite do ciclo esgotado</div>`
+    : st==='nd'  ? `<div class="alert-strip" style="background:rgba(100,116,139,.1);border:1px solid rgba(100,116,139,.3);color:#94a3b8">— Serviço não incluso neste plano</div>`
+    : total===lim     ? `<div class="alert-strip" style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#ef4444">🚨 Último uso disponível no ciclo</div>`
+    : total===lim-1   ? `<div class="alert-strip" style="background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);color:#f59e0b">⚠️ Penúltimo uso — resta 1</div>` : '';
+
+  const { fim } = cicloAtual(d.ativacao);
+
+  document.getElementById('resultado').innerHTML = `
+    <div class="result-card" style="border-color:${sc.br}">
+      <div class="rcard-head" style="background:${sc.bg}">
+        <div class="sdot" style="background:${sc.dot};box-shadow:0 0 5px ${sc.dot}60"></div>
+        <span class="rplate">${p}</span>
+        <span class="rplan" style="background:${cor}22;color:${cor};border:1px solid ${cor}44">${d.plano.toUpperCase()}</span>
+      </div>
+      <div class="rcard-body">
+        <div class="rmeta">
+          <div class="mitem"><div class="mlabel">Tipo</div><div class="mval">${cap(d.tipo)}</div></div>
+          <div class="mitem"><div class="mlabel">Serviço</div><div class="mval">${SVC_EM[svc]} ${cap(svc)}</div></div>
+          <div class="mitem"><div class="mlabel">Usos/Ciclo</div><div class="mval" style="color:${pg}">${total}/${lim}</div></div>
+          <div class="mitem"><div class="mlabel">Restante</div><div class="mval">${rest}</div></div>
+        </div>
+        ${lim>0 && st!=='vencido' ? `
+          <div class="prog-label"><span>Utilização no ciclo</span><span>${pct}%</span></div>
+          <div class="prog-track"><div class="prog-fill" id="pgf" style="width:0%;background:${pg}"></div></div>` : ''}
+        ${st!=='vencido' ? `
+          <div class="countdown-block">
+            <div class="cd-label">⏱ Tempo restante no ciclo — ${fmtData(d.ativacao)} → ${fmtDataFull(fim)}</div>
+            <div class="cd-segs">
+              <div class="cd-unit"><div class="cd-val" id="cd-d">--</div><div class="cd-unit-lbl">dias</div></div>
+              <div class="cd-sep">:</div>
+              <div class="cd-unit"><div class="cd-val" id="cd-h">--</div><div class="cd-unit-lbl">horas</div></div>
+              <div class="cd-sep">:</div>
+              <div class="cd-unit"><div class="cd-val" id="cd-m">--</div><div class="cd-unit-lbl">min</div></div>
+              <div class="cd-sep">:</div>
+              <div class="cd-unit"><div class="cd-val" id="cd-s">--</div><div class="cd-unit-lbl">seg</div></div>
+            </div>
+          </div>` : `
+          <div class="yearend-banner">
+            <div class="yearend-title">🔔 Ciclo anual vencido</div>
+            <div class="yearend-desc">O ciclo encerrou em <strong>${fmtDataFull(fim)}</strong>. Renove para iniciar novo ciclo de 12 meses e zerar os usos.</div>
+            <button class="btn btn-danger" style="margin-top:2px" onclick="renovarAno('${p}')">🔄 Renovar Ciclo Agora</button>
+          </div>`}
+        ${alerta}
+      </div>
+    </div>`;
+
+  if (lim>0 && st!=='vencido') setTimeout(()=>{ const f=document.getElementById('pgf'); if(f) f.style.width=pct+'%'; },80);
+  st !== 'vencido' ? startCountdown(p) : stopCountdown();
+}
+
+/* ═══════════════════════════════════════════
+   COUNTDOWN
+═══════════════════════════════════════════ */
+function startCountdown(p) {
+  stopCountdown();
+  if (!placas[p]) return;
+  function tick() {
+    const ms = cicloAtual(placas[p].ativacao).fim - new Date();
+    if (ms <= 0) { stopCountdown(); renderRes(p, placas[p], svcAtivo, 0, 0, 'vencido'); return; }
+    const dias  = Math.floor(ms / 86400000);
+    const horas = Math.floor((ms % 86400000) / 3600000);
+    const mins  = Math.floor((ms % 3600000)  / 60000);
+    const segs  = Math.floor((ms % 60000)    / 1000);
+    const u = dias < 7;
+    setCD('cd-d', pad(dias),  u);
+    setCD('cd-h', pad(horas), u);
+    setCD('cd-m', pad(mins),  u);
+    setCD('cd-s', pad(segs),  u);
+  }
+  tick();
+  cdTimer = setInterval(tick, 1000);
+}
+
+function stopCountdown() { if (cdTimer) { clearInterval(cdTimer); cdTimer = null; } }
+function setCD(id, val, u) { const e=document.getElementById(id); if(!e) return; e.textContent=val; e.className='cd-val'+(u?' urgent':''); }
+function pad(n) { return String(n).padStart(2,'0'); }
+
+/* ═══════════════════════════════════════════
+   IMPORTAÇÃO EXCEL / CSV
+═══════════════════════════════════════════ */
+function abrirImport() {
+  document.getElementById('modalOverlay').style.display = 'flex';
+  document.getElementById('importResult').classList.remove('show');
+}
+
+function fecharModal()       { document.getElementById('modalOverlay').style.display = 'none'; }
+function fecharModalFora(e)  { if (e.target === document.getElementById('modalOverlay')) fecharModal(); }
+
+function onDrop(e) {
+  e.preventDefault();
+  document.getElementById('dropZone').classList.remove('drag');
+  const file = e.dataTransfer.files[0];
+  if (file) lerArquivo(file);
+}
+
+function onFileSelect(e) {
+  const file = e.target.files[0];
+  if (file) lerArquivo(file);
+}
+
+function lerArquivo(file) {
+  const nome = file.name.toLowerCase();
+
+  if (nome.endsWith('.csv') || nome.endsWith('.txt')) {
+    const reader = new FileReader();
+    reader.onload = e => importarCSV(e.target.result);
+    reader.readAsText(file, 'UTF-8');
+    return;
+  }
+
+  if (nome.endsWith('.xls') || nome.endsWith('.xlsx')) {
+    // Carrega SheetJS dinamicamente apenas quando necessário
+    const carregarEProcessar = () => {
+      const reader = new FileReader();
+      reader.onload = e => {
+        try {
+          const wb   = XLSX.read(e.target.result, { type: 'array', cellDates: false });
+          const ws   = wb.Sheets[wb.SheetNames[0]];
+          const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '', raw: true });
+          importarLinhas(rows);
+        } catch(err) {
+          toast('Erro ao ler o arquivo — verifique se não está corrompido', 'danger');
+          console.error(err);
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    };
+
+    if (typeof XLSX !== 'undefined') {
+      carregarEProcessar();
+    } else {
+      toast('Carregando biblioteca Excel...', 'warning');
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+      script.onload  = () => carregarEProcessar();
+      script.onerror = () => toast('Não foi possível carregar a biblioteca Excel. Verifique sua conexão com a internet e tente novamente.', 'danger');
+      document.head.appendChild(script);
+    }
+    return;
+  }
+
+  toast('Formato não suportado. Use .xlsx, .xls ou .csv', 'danger');
+}
+
+/* ─── EXCEL: parse rows ─── */
+function importarLinhas(rows) {
+  // Encontra a linha de cabeçalho (contém "placa")
+  let hIdx = -1;
+  for (let i = 0; i < Math.min(5, rows.length); i++) {
+    const r = rows[i].map(c => String(c).toLowerCase().trim());
+    if (r.some(c => c === 'placa')) { hIdx = i; break; }
+  }
+
+  if (hIdx === -1) { toast('Cabeçalho "Placa" não encontrado no arquivo','danger'); return; }
+
+  const header = rows[hIdx].map(c => String(c).toLowerCase().trim());
+
+  // Detecta índices das colunas (tolerante a variações de nome)
+  const iPlaca = header.findIndex(c => c === 'placa');
+  const iData  = header.findIndex(c => c.includes('ativa'));
+  const iPlano = header.findIndex(c => c.includes('plano') || c === 'planos');
+  const iCat   = header.findIndex(c => c.includes('categ'));
+
+  if (iPlaca === -1) { toast('Coluna "Placa" não encontrada','danger'); return; }
+
+  const modo   = document.querySelector('input[name="modoImport"]:checked').value;
+  if (modo === 'replace') placas = {};
+
+  let ok = 0, skip = 0, semData = 0, erros = 0;
+  const errosList = [], semDataList = [];
+  const hoje = new Date().toISOString().slice(0,10);
+
+  for (let i = hIdx + 1; i < rows.length; i++) {
+    const row = rows[i];
+    const placa = String(row[iPlaca] || '').toUpperCase().trim();
+    if (!placa) continue;
+
+    if (!validar(placa)) {
+      errosList.push(`Linha ${i+1}: placa inválida — "${placa}"`); erros++; continue;
+    }
+
+    if (modo === 'merge' && placas[placa]) { skip++; continue; }
+
+    // PLANO
+    const planoRaw = String(row[iPlano] || '').toLowerCase().trim();
+    const plano    = MAP_PLANO[planoRaw] || null;
+    if (!plano) {
+      errosList.push(`Linha ${i+1} (${placa}): plano desconhecido — "${row[iPlano]}"`); erros++; continue;
+    }
+
+    // TIPO via categoria
+    const catRaw = String(row[iCat] || '').toLowerCase().trim();
+    const tipo   = MAP_CATEGORIA[catRaw] || null;
+    if (!tipo) {
+      errosList.push(`Linha ${i+1} (${placa}): categoria desconhecida — "${row[iCat]}"`); erros++; continue;
+    }
+
+    // Verifica compatibilidade plano × tipo
+    const planosDoTipo = Object.keys(PLANOS[tipo]);
+    const planoFinal   = planosDoTipo.includes(plano) ? plano : planosDoTipo[0];
+
+    // DATA — aceita DD/MM/YYYY ou YYYY-MM-DD ou vazio/"-"
+    const dataRaw = String(row[iData] || '').trim();
+    let ativacao  = hoje;
+    let usouPadrao = false;
+
+    if (dataRaw && dataRaw !== '-' && dataRaw !== '') {
+      const parsed = parsarData(dataRaw);
+      if (parsed) { ativacao = parsed; }
+      else { ativacao = hoje; usouPadrao = true; }
+    } else {
+      usouPadrao = true;
+    }
+
+    if (usouPadrao) {
+      semDataList.push(`${placa}: sem data → usando ${fmtData(hoje)}`);
+      semData++;
+    }
+
+    placas[placa] = { tipo, plano: planoFinal, ativacao, usos: {} };
+    ok++;
+  }
+
+  salvar(); atualizarBadge();
+  mostrarResultadoImport(ok, skip, semData, erros, semDataList, errosList);
+}
+
+/* ─── CSV: parse text ─── */
+function importarCSV(texto) {
+  const linhas = texto.replace(/^\uFEFF/,'').replace(/\r\n/g,'\n').replace(/\r/g,'\n').split('\n');
+  const sep    = linhas[0].includes(';') ? ';' : ',';
+  const rows   = linhas.map(l => l.split(sep).map(c => c.replace(/^"|"$/g,'').trim()));
+  importarLinhas(rows);
+}
+
+/* ─── PARSER DE DATA ─── */
+function parsarData(str) {
+  str = String(str).trim();
+
+  // Número serial do Excel (ex: 45123) — SheetJS pode retornar assim
+  if (/^\d{4,5}$/.test(str)) {
+    const serial = parseInt(str, 10);
+    // Epoch do Excel: 1 jan 1900 = serial 1 (com bug do ano 1900)
+    const dt = new Date((serial - 25569) * 86400 * 1000);
+    if (!isNaN(dt.getTime())) return dt.toISOString().slice(0, 10);
+  }
+
+  // DD/MM/YYYY
+  const m1 = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (m1) return `${m1[3]}-${m1[2].padStart(2,'0')}-${m1[1].padStart(2,'0')}`;
+  // YYYY-MM-DD
+  if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
+  // DD-MM-YYYY
+  const m3 = str.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
+  if (m3) return `${m3[3]}-${m3[2].padStart(2,'0')}-${m3[1].padStart(2,'0')}`;
+  // MM/DD/YYYY (padrão americano eventual)
+  const m4 = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (m4) return `${m4[3]}-${m4[1].padStart(2,'0')}-${m4[2].padStart(2,'0')}`;
+
+  return null;
+}
+
+/* ─── RESULTADO DA IMPORTAÇÃO ─── */
+function mostrarResultadoImport(ok, skip, semData, erros, semDataList, errosList) {
+  document.getElementById('impOk').textContent   = ok;
+  document.getElementById('impSkip').textContent = skip;
+  document.getElementById('impWarn').textContent = semData;
+  document.getElementById('impErr').textContent  = erros;
+
+  let wHtml = '', eHtml = '';
+  if (semDataList.length) {
+    wHtml = `<div class="imp-section-label">⚠ Data padrão usada (hoje)</div>
+      <div class="imp-warn-list">${semDataList.map(w=>`<div class="imp-warn-row">${w}</div>`).join('')}</div>`;
+  }
+  if (errosList.length) {
+    eHtml = `<div class="imp-section-label">✕ Erros de validação</div>
+      <div class="imp-warn-list">${errosList.map(e=>`<div class="imp-err-row">${e}</div>`).join('')}</div>`;
+  }
+
+  document.getElementById('impWarnList').innerHTML = wHtml;
+  document.getElementById('impErrList').innerHTML  = eHtml;
+  document.getElementById('importResult').classList.add('show');
+
+  toast(`${ok} placas importadas${erros ? ` · ${erros} erros` : ''}`, erros > 0 ? 'warning' : 'success');
+}
+
+/* ═══════════════════════════════════════════
+   LISTA DE PLACAS (badge verde)
+═══════════════════════════════════════════ */
+let listaFiltro = '';
+
+function abrirListaPlacas() {
+  listaFiltro = '';
+  document.getElementById('listaSearch').value = '';
+  document.getElementById('listaOverlay').style.display = 'flex';
+  renderLista();
+}
+
+function fecharLista()       { document.getElementById('listaOverlay').style.display = 'none'; }
+function fecharListaFora(e)  { if (e.target === document.getElementById('listaOverlay')) fecharLista(); }
+
+function filtrarLista() {
+  listaFiltro = document.getElementById('listaSearch').value.toLowerCase().trim();
+  renderLista();
+}
+
+function renderLista() {
+  const tbody = document.getElementById('listaTbody');
+  const todas = Object.entries(placas);
+
+  const filtradas = listaFiltro
+    ? todas.filter(([p, d]) =>
+        p.toLowerCase().includes(listaFiltro) ||
+        d.tipo.includes(listaFiltro) ||
+        d.plano.includes(listaFiltro))
+    : todas;
+
+  // Ordena por placa
+  filtradas.sort((a, b) => a[0].localeCompare(b[0]));
+
+  document.getElementById('listaCountLabel').textContent =
+    `${filtradas.length} / ${todas.length} placa${todas.length !== 1 ? 's' : ''}`;
+
+  if (!filtradas.length) {
+    tbody.innerHTML = `<tr><td colspan="6" class="lista-empty">${listaFiltro ? 'Nenhuma placa encontrada para "' + listaFiltro + '"' : 'Nenhuma placa cadastrada'}</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = filtradas.map(([p, d]) => {
+    const cor    = PLANO_COR[d.plano] || '#94a3b8';
+    const venceu = cicloVencido(d.ativacao);
+    const { fim } = cicloAtual(d.ativacao);
+
+    // Conta usos no ciclo atual (todos os serviços)
+    let usosTotal = 0;
+    for (const s in d.usos) usosTotal += usosNoCiclo(d.usos[s], d.ativacao).length;
+
+    const tipoIco = { leve:'🚗', moto:'🏍️', caminhao:'🚛', utilitario:'🚐' }[d.tipo] || '🚗';
+
+    return `<tr id="row-${p}">
+      <td class="td-placa">${p}</td>
+      <td class="td-tipo">${tipoIco} ${cap(d.tipo)}</td>
+      <td><span class="td-plan-badge" style="background:${cor}20;color:${cor};border:1px solid ${cor}40">${d.plano.toUpperCase()}</span></td>
+      <td class="td-ativ">${fmtData(d.ativacao)}</td>
+      <td class="td-cycle" title="${venceu ? 'Ciclo vencido em ' + fmtDataFull(fim) : 'Ciclo ativo até ' + fmtDataFull(fim)}">
+        <span class="${venceu ? 'cycle-exp' : 'cycle-ok'}"></span>
+        <span style="font-size:9px;color:var(--muted);margin-left:4px;font-family:'Courier New',Courier,monospace">${usosTotal} uso${usosTotal !== 1 ? 's' : ''}</span>
+      </td>
+      <td>
+        <div class="td-actions">
+          <button class="act-btn edit"   onclick="editarPlaca('${p}')">✏ Editar</button>
+          <button class="act-btn view"   onclick="consultarDaLista('${p}')">🔍 Consultar</button>
+          <button class="act-btn del"    onclick="excluirPlaca('${p}')">✕ Excluir</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function editarPlaca(p) {
+  // Fecha qualquer edit aberto
+  document.querySelectorAll('.edit-row').forEach(r => r.remove());
+  document.querySelectorAll('.row-editing').forEach(r => r.classList.remove('row-editing'));
+
+  const d   = placas[p];
+  const row = document.getElementById('row-' + p);
+  if (!row) return;
+  row.classList.add('row-editing');
+
+  // Opções de tipo e plano
+  const tiposOpts = ['leve','moto','caminhao','utilitario']
+    .map(t => `<option value="${t}" ${d.tipo === t ? 'selected' : ''}>${cap(t)}</option>`).join('');
+
+  const planosOpts = ['ouro','prata','bronze','unico']
+    .map(pl => `<option value="${pl}" ${d.plano === pl ? 'selected' : ''}>${cap(pl)}</option>`).join('');
+
+  const editRow = document.createElement('tr');
+  editRow.className = 'edit-row';
+  editRow.id = 'editrow-' + p;
+  editRow.innerHTML = `
+    <td colspan="6">
+      <div class="edit-fields">
+        <select id="edit-tipo-${p}">${tiposOpts}</select>
+        <select id="edit-plano-${p}">${planosOpts}</select>
+        <input type="date" id="edit-data-${p}" value="${d.ativacao}" style="color-scheme:dark">
+        <button class="act-btn save"        onclick="salvarEdicao('${p}')">✓ Salvar</button>
+        <button class="act-btn cancel-edit" onclick="cancelarEdicao('${p}')">Cancelar</button>
+      </div>
+    </td>`;
+
+  row.after(editRow);
+  document.getElementById('edit-data-' + p).focus();
+}
+
+function salvarEdicao(p) {
+  const tipo   = document.getElementById('edit-tipo-' + p).value;
+  const plano  = document.getElementById('edit-plano-' + p).value;
+  const data   = document.getElementById('edit-data-' + p).value;
+
+  if (!data) { toast('Informe a data de ativação','warning'); return; }
+
+  // Ajusta plano se incompatível com o tipo
+  const planosDoTipo = Object.keys(PLANOS[tipo]);
+  const planoFinal   = planosDoTipo.includes(plano) ? plano : planosDoTipo[0];
+
+  placas[p].tipo     = tipo;
+  placas[p].plano    = planoFinal;
+  placas[p].ativacao = data;
+  salvar();
+
+  toast(`${p} atualizada`, 'success');
+  cancelarEdicao(p);
+  renderLista();
+  atualizarBadge();
+}
+
+function cancelarEdicao(p) {
+  const editRow = document.getElementById('editrow-' + p);
+  if (editRow) editRow.remove();
+  const row = document.getElementById('row-' + p);
+  if (row) row.classList.remove('row-editing');
+}
+
+function excluirPlaca(p) {
+  if (!confirm(`Excluir a placa ${p} permanentemente? Todos os seus lançamentos serão perdidos.`)) return;
+  delete placas[p];
+  salvar(); atualizarBadge();
+  toast(`Placa ${p} excluída`, 'danger');
+  renderLista();
+}
+
+function consultarDaLista(p) {
+  // Preenche o campo de placa e abre o modal de consulta
+  document.getElementById('placa').value = p;
+  onPlacaInput();
+  fecharLista();
+  renderConsult(p);
+  document.getElementById('consultOverlay').style.display = 'flex';
+}
+
+
+function consultarPlaca() {
+  const p = document.getElementById('placa').value.trim().toUpperCase();
+  if (!p)          { toast('Digite a placa para consultar','warning'); return; }
+  if (!validar(p)) { toast('Placa inválida','danger'); return; }
+  if (!placas[p])  { toast('Placa não cadastrada na base','warning'); return; }
+  renderConsult(p);
+  document.getElementById('consultOverlay').style.display = 'flex';
+}
+
+function fecharConsult()      { document.getElementById('consultOverlay').style.display = 'none'; }
+function fecharConsultFora(e) { if (e.target === document.getElementById('consultOverlay')) fecharConsult(); }
+
+function renderConsult(p) {
+  const d = placas[p];
+  const { inicio, fim } = cicloAtual(d.ativacao);
+  const cor = PLANO_COR[d.plano] || '#94a3b8';
+
+  document.getElementById('consultTitle').textContent = `🔍 ${p}`;
+
+  // Conta total de usos no ciclo
+  let totalCiclo = 0;
+  for (const s in d.usos) totalCiclo += usosNoCiclo(d.usos[s], d.ativacao).length;
+
+  const headerHtml = `
+    <div class="consult-plate-header">
+      <span class="consult-plate-val">${p}</span>
+      <div class="consult-info-col">
+        <div>Tipo: <strong>${cap(d.tipo)}</strong> &nbsp;·&nbsp; Plano: <strong style="color:${cor}">${d.plano.toUpperCase()}</strong></div>
+        <div>Ciclo: <strong>${fmtData(d.ativacao)} → ${fmtDataFull(fim)}</strong></div>
+        <div>Usos no ciclo atual: <strong>${totalCiclo}</strong></div>
+      </div>
+      ${totalCiclo > 0 ? `<button class="consult-clear-all" onclick="clearAllSvc('${p}')">🗑 Zerar tudo</button>` : ''}
+    </div>`;
+
+  // Blocos por serviço
+  const svcs = Object.keys(SVC_EM);
+  const blocos = svcs.map(svc => {
+    const lim      = (PLANOS[d.tipo][d.plano] || {})[svc] || 0;
+    const todos    = d.usos[svc] || [];
+    const noCiclo  = usosNoCiclo(todos, d.ativacao);
+    const foraArr  = todos.filter(x => !noCiclo.includes(x));
+    const pct      = lim > 0 ? Math.round((noCiclo.length / lim) * 100) : 0;
+    const countColor = noCiclo.length >= lim && lim > 0 ? '#ef4444' : noCiclo.length >= lim - 1 && lim > 0 ? '#f59e0b' : '#22c55e';
+
+    // Todas as entradas ordenadas (ciclo atual primeiro, depois anteriores)
+    const allEntries = [
+      ...noCiclo.map(iso => ({ iso, inCycle: true })),
+      ...foraArr.map(iso => ({ iso, inCycle: false }))
+    ].sort((a,b) => new Date(b.iso) - new Date(a.iso));
+
+    const entriesHtml = allEntries.length === 0
+      ? `<div class="svc-no-entries">Nenhum uso registrado</div>`
+      : allEntries.map((e, i) => {
+          const dt  = new Date(e.iso);
+          const dts = dt.toLocaleDateString('pt-BR') + ' ' + dt.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+          const cycleBadge = e.inCycle
+            ? `<span class="entry-cycle" style="background:rgba(34,197,94,.12);color:#22c55e;border:1px solid rgba(34,197,94,.25)">Ciclo atual</span>`
+            : `<span class="entry-cycle" style="background:rgba(100,116,139,.1);color:#64748b;border:1px solid rgba(100,116,139,.2)">Ciclo anterior</span>`;
+          return `
+            <div class="svc-entry">
+              <span class="entry-num">${allEntries.length - i}</span>
+              <span class="entry-date">${dts}</span>
+              ${cycleBadge}
+              <button class="entry-del" title="Apagar este lançamento" onclick="deleteEntry('${p}','${svc}','${e.iso}')">✕</button>
+            </div>`;
+        }).join('');
+
+    const hasAny = todos.length > 0;
+
+    return `
+      <div class="svc-block" id="svcblock-${svc}">
+        <div class="svc-block-hd" onclick="toggleSvcBlock('${svc}')">
+          <span class="svc-block-icon">${SVC_EM[svc]}</span>
+          <span class="svc-block-name">${cap(svc)}</span>
+          <span class="svc-block-count" style="background:${countColor}18;color:${countColor};border:1px solid ${countColor}30">
+            ${noCiclo.length}${lim > 0 ? '/' + lim : ''} usos
+          </span>
+          ${hasAny ? `<button class="svc-block-clear" onclick="event.stopPropagation();clearSvc('${p}','${svc}')">Zerar</button>` : ''}
+          <span class="svc-chev">▼</span>
+        </div>
+        <div class="svc-entries">${entriesHtml}</div>
+      </div>`;
+  }).join('');
+
+  document.getElementById('consultBody').innerHTML = headerHtml + blocos;
+}
+
+function toggleSvcBlock(svc) {
+  document.getElementById('svcblock-' + svc).classList.toggle('open');
+}
+
+function deleteEntry(p, svc, iso) {
+  if (!placas[p] || !placas[p].usos[svc]) return;
+  placas[p].usos[svc] = placas[p].usos[svc].filter(x => x !== iso);
+  salvar();
+  toast('Lançamento apagado', 'warning');
+  renderConsult(p);
+  // Atualiza resultado principal se estiver mostrando a mesma placa
+  if (document.getElementById('resultado').innerHTML) renderResFromPlate(p);
+}
+
+function clearSvc(p, svc) {
+  if (!placas[p]) return;
+  if (!confirm(`Zerar todos os usos de "${svc}" para ${p}?`)) return;
+  placas[p].usos[svc] = [];
+  salvar();
+  toast(`Usos de ${svc} zerados`, 'warning');
+  renderConsult(p);
+  renderResFromPlate(p);
+}
+
+function clearAllSvc(p) {
+  if (!placas[p]) return;
+  if (!confirm(`Zerar TODOS os serviços da placa ${p}? Esta ação não pode ser desfeita.`)) return;
+  for (const s in placas[p].usos) placas[p].usos[s] = [];
+  salvar();
+  toast(`Todos os usos de ${p} zerados`, 'danger');
+  renderConsult(p);
+  renderResFromPlate(p);
+}
+
+// Re-renderiza o card de resultado se a placa consultada for a mesma que está ativa
+function renderResFromPlate(p) {
+  const placoEl = document.getElementById('placa');
+  if (placoEl && placoEl.value.toUpperCase().trim() === p && placas[p]) {
+    const d   = placas[p];
+    const svc = svcAtivo;
+    const lim = (PLANOS[d.tipo][d.plano] || {})[svc] || 0;
+    const total = usosNoCiclo(d.usos[svc] || [], d.ativacao).length;
+    renderRes(p, d, svc, total, lim, cicloVencido(d.ativacao) ? 'vencido' : lim === 0 ? 'nd' : 'ok');
+  }
+}
+
+
+function exportarCSV() {
+  const total = Object.keys(placas).length;
+  if (!total) { toast('Nenhuma placa para exportar','warning'); return; }
+  let csv = 'placa,tipo,plano,ativacao\n';
+  for (const [p, d] of Object.entries(placas)) csv += `${p},${d.tipo},${d.plano},${d.ativacao}\n`;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+  a.download = `placas_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  toast(`${total} placas exportadas`, 'success');
+}
+
+/* ═══════════════════════════════════════════
+   HISTÓRICO
+═══════════════════════════════════════════ */
+function addHist(p, s) {
+  const t = new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  hist.unshift({p,s,t});
+  if (hist.length > 40) hist.pop();
+  localStorage.setItem('hist', JSON.stringify(hist));
+  renderHist();
+}
+
+function renderHist() {
+  const el = document.getElementById('hlist');
+  if (!hist.length) { el.innerHTML = '<div class="empty">Nenhum atendimento registrado ainda</div>'; return; }
+  el.innerHTML = hist.map(h=>`
+    <div class="hist-item">
+      <span class="hplate">${h.p}</span>
+      <span class="hsvc">${SVC_EM[h.s]||'?'} ${h.s}</span>
+      <span class="htime">${h.t}</span>
+    </div>`).join('');
+}
+
+function limparHist() {
+  hist = []; localStorage.removeItem('hist');
+  renderHist(); toast('Histórico limpo','warning');
+}
+
+/* ═══════════════════════════════════════════
+   UTILS
+═══════════════════════════════════════════ */
+function salvar()       { localStorage.setItem('placas', JSON.stringify(placas)); }
+function atualizarBadge() {
+  const n = Object.keys(placas).length;
+  document.getElementById('badgePlacas').textContent = `${n.toLocaleString('pt-BR')} placa${n!==1?'s':''}`;
+}
+function toast(msg, type='success') {
+  const c = document.getElementById('toasts');
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  el.innerHTML = `<span>${{success:'✓',danger:'✕',warning:'⚠'}[type]||'·'}</span> ${msg}`;
+  c.appendChild(el);
+  setTimeout(()=>{ el.classList.add('out'); setTimeout(()=>el.remove(),220); },3200);
+}
+function cap(s)         { return s.charAt(0).toUpperCase()+s.slice(1); }
+function fmtData(iso)   { const [y,m,d]=iso.split('-'); return `${d}/${m}/${y}`; }
+function fmtDataFull(dt){ return dt.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric'}); }
+</script>
+</body>
+</html>
