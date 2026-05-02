@@ -275,10 +275,12 @@
 
   .imp-section-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin: 8px 0 4px; font-weight: 700; }
 
-  /* PLATES LIST MODAL */
+  /* ══════════════════════════════════════
+     PLATES LIST MODAL — BULK SELECTION
+  ══════════════════════════════════════ */
   .lista-toolbar {
     display: flex; align-items: center; gap: 8px;
-    margin-bottom: 12px; flex-shrink: 0;
+    margin-bottom: 8px; flex-shrink: 0;
   }
 
   .lista-search {
@@ -293,6 +295,32 @@
 
   .lista-count-label { font-size: 11px; color: var(--muted); white-space: nowrap; font-family: 'Courier New', Courier, monospace; }
 
+  /* Bulk action bar — só aparece quando há seleção */
+  .bulk-bar {
+    display: none; align-items: center; gap: 8px;
+    background: rgba(239,68,68,.07); border: 1px solid rgba(239,68,68,.22);
+    border-radius: var(--radius-sm); padding: 7px 12px; margin-bottom: 8px;
+    animation: fadeUp .18s ease; flex-shrink: 0;
+  }
+  .bulk-bar.visible { display: flex; }
+
+  .bulk-count {
+    font-family: 'Courier New', Courier, monospace; font-size: 12px;
+    font-weight: 700; color: var(--red); flex: 1;
+  }
+
+  .bulk-btn {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 11px; font-weight: 700; padding: 5px 12px;
+    border-radius: var(--radius-sm); border: 1px solid; cursor: pointer;
+    font-family: 'Segoe UI', system-ui, sans-serif; transition: all .15s; white-space: nowrap;
+    background: transparent;
+  }
+  .bulk-btn.del   { color: var(--red);   border-color: rgba(239,68,68,.4); }
+  .bulk-btn.del:hover  { background: var(--red-dim); }
+  .bulk-btn.clear { color: var(--muted); border-color: var(--border); }
+  .bulk-btn.clear:hover { color: var(--text); background: var(--surface2); }
+
   .lista-table-wrap { overflow-y: auto; flex: 1; min-height: 0; }
 
   .lista-table { width: 100%; border-collapse: collapse; font-size: 12px; }
@@ -306,6 +334,7 @@
     border-bottom: 1px solid var(--border);
   }
 
+  .lista-table th:first-child { width: 36px; text-align: center; }
   .lista-table th:last-child { text-align: center; }
 
   .lista-table td {
@@ -313,8 +342,26 @@
     vertical-align: middle;
   }
 
+  .lista-table td:first-child { text-align: center; width: 36px; }
+
   .lista-table tr:hover td { background: rgba(255,255,255,.02); }
+  .lista-table tr.row-selected td { background: rgba(239,68,68,.05) !important; }
   .lista-table tr:last-child td { border-bottom: none; }
+
+  /* Custom checkbox */
+  .cb-wrap { display: flex; align-items: center; justify-content: center; }
+  .cb-wrap input[type="checkbox"] { appearance: none; width: 14px; height: 14px; border: 1.5px solid var(--muted); border-radius: 3px; cursor: pointer; transition: all .15s; position: relative; flex-shrink: 0; }
+  .cb-wrap input[type="checkbox"]:checked { background: var(--red); border-color: var(--red); }
+  .cb-wrap input[type="checkbox"]:checked::after { content: '✓'; position: absolute; top: -1px; left: 1px; font-size: 10px; color: #fff; font-weight: 700; }
+  .cb-wrap input[type="checkbox"]:hover { border-color: var(--text); }
+
+  /* Select-all checkbox in header */
+  #cbSelectAll { appearance: none; width: 14px; height: 14px; border: 1.5px solid var(--muted); border-radius: 3px; cursor: pointer; transition: all .15s; position: relative; }
+  #cbSelectAll:checked { background: var(--amber); border-color: var(--amber); }
+  #cbSelectAll:checked::after { content: '✓'; position: absolute; top: -1px; left: 1px; font-size: 10px; color: #000; font-weight: 700; }
+  #cbSelectAll.indeterminate { background: rgba(245,158,11,.3); border-color: var(--amber); }
+  #cbSelectAll.indeterminate::after { content: '—'; position: absolute; top: -2px; left: 1px; font-size: 9px; color: var(--amber); font-weight: 900; }
+  #cbSelectAll:hover { border-color: var(--text); }
 
   .td-placa { font-family: 'Courier New', Courier, monospace; font-weight: 700; letter-spacing: 2px; font-size: 12px; }
 
@@ -563,10 +610,15 @@
         <div class="map-section-title">🔄 Mapeamento automático de Categorias</div>
         <div class="map-grid">
           <div class="map-item"><span class="map-from">LEVES</span><span class="map-arr">→</span><span class="map-to">leve</span></div>
+          <div class="map-item"><span class="map-from">LEVES até 2000</span><span class="map-arr">→</span><span class="map-to">leve</span></div>
+          <div class="map-item"><span class="map-from">Leves Ford e Citroen</span><span class="map-arr">→</span><span class="map-to">leve</span></div>
           <div class="map-item"><span class="map-from">Leves APP / Veículo de Trabalho</span><span class="map-arr">→</span><span class="map-to">leve</span></div>
           <div class="map-item"><span class="map-from">SUVs | PICKUPs</span><span class="map-arr">→</span><span class="map-to">leve</span></div>
+          <div class="map-item"><span class="map-from">SUVs/PICKUPs Ford e Citroen</span><span class="map-arr">→</span><span class="map-to">leve</span></div>
           <div class="map-item"><span class="map-from">Importados</span><span class="map-arr">→</span><span class="map-to">leve</span></div>
+          <div class="map-item"><span class="map-from">Carros Especiais</span><span class="map-arr">→</span><span class="map-to">leve</span></div>
           <div class="map-item"><span class="map-from">Agregados com Placa</span><span class="map-arr">→</span><span class="map-to">leve</span></div>
+          <div class="map-item"><span class="map-from">Veículos Locação (uso particular/trabalho)</span><span class="map-arr">→</span><span class="map-to">leve</span></div>
           <div class="map-item"><span class="map-from">Motocicleta</span><span class="map-arr">→</span><span class="map-to">moto</span></div>
           <div class="map-item"><span class="map-from">Motocicletas Especiais</span><span class="map-arr">→</span><span class="map-to">moto</span></div>
           <div class="map-item"><span class="map-from">CAMINHAO</span><span class="map-arr">→</span><span class="map-to">caminhao</span></div>
@@ -601,7 +653,7 @@
 
 <!-- MODAL LISTA DE PLACAS -->
 <div class="modal-overlay" id="listaOverlay" style="display:none" onclick="fecharListaFora(event)">
-  <div class="modal" style="width:760px;max-height:88vh">
+  <div class="modal" style="width:780px;max-height:88vh">
     <div class="modal-header">
       <span class="modal-title" id="listaTitle">📋 Base de Placas</span>
       <button class="modal-close" onclick="fecharLista()">✕</button>
@@ -611,11 +663,18 @@
         <input class="lista-search" id="listaSearch" placeholder="🔍  Buscar placa, plano ou tipo..." oninput="filtrarLista()">
         <span class="lista-count-label" id="listaCountLabel">—</span>
       </div>
+      <!-- BARRA DE AÇÃO EM LOTE -->
+      <div class="bulk-bar" id="bulkBar">
+        <span class="bulk-count" id="bulkCount">0 selecionadas</span>
+        <button class="bulk-btn del" onclick="excluirSelecionadas()">✕ Excluir selecionadas</button>
+        <button class="bulk-btn clear" onclick="limparSelecao()">Desmarcar todas</button>
+      </div>
     </div>
     <div class="lista-table-wrap" style="padding:0 18px 16px">
       <table class="lista-table">
         <thead>
           <tr>
+            <th><input type="checkbox" id="cbSelectAll" title="Selecionar/desmarcar todas" onchange="toggleSelectAll(this)"></th>
             <th>Placa</th>
             <th>Tipo</th>
             <th>Plano</th>
@@ -665,23 +724,64 @@ const MAP_PLANO = {
 };
 
 // Mapeamento de categorias do relatório → tipo do sistema
+// Inclui variações com/sem acentos e nomes de marcas (Ford, Citroen, etc.)
 const MAP_CATEGORIA = {
+  // ── LEVE ──────────────────────────────────────────────────────────────────
   'leves': 'leve',
+  'leve': 'leve',
+  'leves até 2000': 'leve',
+  'leves ate 2000': 'leve',
+  'leves ford e citroen': 'leve',
+  'leves ford e citroën': 'leve',
+  'leves ford': 'leve',
+  'leves citroen': 'leve',
+  'leves citroën': 'leve',
   'leves app / veículo de trabalho': 'leve',
   'leves app / veiculo de trabalho': 'leve',
+  'leves app/veiculo de trabalho': 'leve',
+  'leves app/veículo de trabalho': 'leve',
   'suvs | pickups': 'leve',
+  'suvs/pickups': 'leve',
+  'suvs / pickups': 'leve',
+  'suvs|pickups': 'leve',
+  'suvs/pickups ford e citroen': 'leve',
+  'suvs/pickups ford e citroën': 'leve',
+  'suvs | pickups ford e citroen': 'leve',
+  'suvs | pickups ford e citroën': 'leve',
+  'suvs/pickups ford': 'leve',
+  'suvs/pickups citroen': 'leve',
   'importados': 'leve',
+  'carros especiais': 'leve',
+  'carro especial': 'leve',
   'agregados com placa': 'leve',
+  'veículos locação (uso particular/trabalho)': 'leve',
+  'veiculos locacao (uso particular/trabalho)': 'leve',
+  'veículos locação': 'leve',
+  'veiculos locacao': 'leve',
+  'veículo de locação': 'leve',
+  'veiculo de locacao': 'leve',
+  'locação': 'leve',
+  'locacao': 'leve',
+  // ── MOTO ──────────────────────────────────────────────────────────────────
   'motocicleta': 'moto',
+  'motocicletas': 'moto',
+  'moto': 'moto',
   'motocicletas especiais': 'moto',
+  'motocicleta especial': 'moto',
+  // ── CAMINHÃO ──────────────────────────────────────────────────────────────
   'caminhao': 'caminhao',
   'caminhão': 'caminhao',
+  'caminhoes': 'caminhao',
+  'caminhões': 'caminhao',
   'caminhões - veículos especiais': 'caminhao',
   'caminhoes - veiculos especiais': 'caminhao',
+  'caminhão - veículos especiais': 'caminhao',
+  'caminhao - veiculos especiais': 'caminhao',
+  // ── UTILITÁRIO ────────────────────────────────────────────────────────────
   'utilitário/motorhome/foodtruck': 'utilitario',
   'utilitario/motorhome/foodtruck': 'utilitario',
-  // Fallbacks genéricos
-  'leve': 'leve', 'moto': 'moto', 'utilitario': 'utilitario', 'utilitário': 'utilitario'
+  'utilitario': 'utilitario',
+  'utilitário': 'utilitario',
 };
 
 const SVC_EM = { guincho:'🏗️', bateria:'🔋', pneu:'🛞', combustivel:'⛽', chaveiro:'🔑', taxi:'🚕', hospedagem:'🏨' };
@@ -691,6 +791,9 @@ let placas   = JSON.parse(localStorage.getItem('placas')) || {};
 let hist     = JSON.parse(localStorage.getItem('hist'))   || [];
 let svcAtivo = 'guincho';
 let cdTimer  = null;
+
+// Conjunto de placas selecionadas na lista (por placa string)
+let selecaoAtiva = new Set();
 
 document.getElementById('dataAtivacao').valueAsDate = new Date();
 atualizarBadge();
@@ -925,7 +1028,6 @@ function lerArquivo(file) {
   }
 
   if (nome.endsWith('.xls') || nome.endsWith('.xlsx')) {
-    // Carrega SheetJS dinamicamente apenas quando necessário
     const carregarEProcessar = () => {
       const reader = new FileReader();
       reader.onload = e => {
@@ -960,7 +1062,6 @@ function lerArquivo(file) {
 
 /* ─── EXCEL: parse rows ─── */
 function importarLinhas(rows) {
-  // Encontra a linha de cabeçalho (contém "placa")
   let hIdx = -1;
   for (let i = 0; i < Math.min(5, rows.length); i++) {
     const r = rows[i].map(c => String(c).toLowerCase().trim());
@@ -971,7 +1072,6 @@ function importarLinhas(rows) {
 
   const header = rows[hIdx].map(c => String(c).toLowerCase().trim());
 
-  // Detecta índices das colunas (tolerante a variações de nome)
   const iPlaca = header.findIndex(c => c === 'placa');
   const iData  = header.findIndex(c => c.includes('ativa'));
   const iPlano = header.findIndex(c => c.includes('plano') || c === 'planos');
@@ -1004,18 +1104,17 @@ function importarLinhas(rows) {
       errosList.push(`Linha ${i+1} (${placa}): plano desconhecido — "${row[iPlano]}"`); erros++; continue;
     }
 
-    // TIPO via categoria
-    const catRaw = String(row[iCat] || '').toLowerCase().trim();
-    const tipo   = MAP_CATEGORIA[catRaw] || null;
+    // TIPO via categoria — usa normalizeCategoria para match flexível
+    const catRaw = String(row[iCat] || '').trim();
+    const tipo   = resolverCategoria(catRaw);
     if (!tipo) {
-      errosList.push(`Linha ${i+1} (${placa}): categoria desconhecida — "${row[iCat]}"`); erros++; continue;
+      errosList.push(`Linha ${i+1} (${placa}): categoria desconhecida — "${catRaw}"`); erros++; continue;
     }
 
-    // Verifica compatibilidade plano × tipo
     const planosDoTipo = Object.keys(PLANOS[tipo]);
     const planoFinal   = planosDoTipo.includes(plano) ? plano : planosDoTipo[0];
 
-    // DATA — aceita DD/MM/YYYY ou YYYY-MM-DD ou vazio/"-"
+    // DATA
     const dataRaw = String(row[iData] || '').trim();
     let ativacao  = hoje;
     let usouPadrao = false;
@@ -1041,6 +1140,33 @@ function importarLinhas(rows) {
   mostrarResultadoImport(ok, skip, semData, erros, semDataList, errosList);
 }
 
+/* ─── Resolver categoria com normalização flexível ─── */
+function resolverCategoria(raw) {
+  if (!raw) return null;
+  // Tenta match exato primeiro (case-insensitive + sem acento)
+  const key = raw.toLowerCase().trim();
+  if (MAP_CATEGORIA[key]) return MAP_CATEGORIA[key];
+
+  // Normaliza: remove acentos, múltiplos espaços
+  const norm = key
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')  // remove acentos
+    .replace(/\s+/g, ' ').trim();
+
+  for (const [k, v] of Object.entries(MAP_CATEGORIA)) {
+    const kn = k.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g,' ').trim();
+    if (kn === norm) return v;
+  }
+
+  // Fallback por prefixo (ex: "Leves Ford e Fiat" não está no map mas começa com "leves")
+  if (norm.startsWith('leve')) return 'leve';
+  if (norm.startsWith('suv') || norm.startsWith('pickup')) return 'leve';
+  if (norm.startsWith('moto')) return 'moto';
+  if (norm.startsWith('caminhao') || norm.startsWith('caminhao')) return 'caminhao';
+  if (norm.startsWith('utilitari')) return 'utilitario';
+
+  return null;
+}
+
 /* ─── CSV: parse text ─── */
 function importarCSV(texto) {
   const linhas = texto.replace(/^\uFEFF/,'').replace(/\r\n/g,'\n').replace(/\r/g,'\n').split('\n');
@@ -1053,25 +1179,17 @@ function importarCSV(texto) {
 function parsarData(str) {
   str = String(str).trim();
 
-  // Número serial do Excel (ex: 45123) — SheetJS pode retornar assim
   if (/^\d{4,5}$/.test(str)) {
     const serial = parseInt(str, 10);
-    // Epoch do Excel: 1 jan 1900 = serial 1 (com bug do ano 1900)
     const dt = new Date((serial - 25569) * 86400 * 1000);
     if (!isNaN(dt.getTime())) return dt.toISOString().slice(0, 10);
   }
 
-  // DD/MM/YYYY
   const m1 = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
   if (m1) return `${m1[3]}-${m1[2].padStart(2,'0')}-${m1[1].padStart(2,'0')}`;
-  // YYYY-MM-DD
   if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
-  // DD-MM-YYYY
   const m3 = str.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
   if (m3) return `${m3[3]}-${m3[2].padStart(2,'0')}-${m3[1].padStart(2,'0')}`;
-  // MM/DD/YYYY (padrão americano eventual)
-  const m4 = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-  if (m4) return `${m4[3]}-${m4[1].padStart(2,'0')}-${m4[2].padStart(2,'0')}`;
 
   return null;
 }
@@ -1101,22 +1219,103 @@ function mostrarResultadoImport(ok, skip, semData, erros, semDataList, errosList
 }
 
 /* ═══════════════════════════════════════════
-   LISTA DE PLACAS (badge verde)
+   LISTA DE PLACAS — BULK SELECT
 ═══════════════════════════════════════════ */
 let listaFiltro = '';
+// Placas visíveis atualmente (após filtro), para "selecionar todas"
+let placasVisiveis = [];
 
 function abrirListaPlacas() {
   listaFiltro = '';
+  selecaoAtiva.clear();
   document.getElementById('listaSearch').value = '';
   document.getElementById('listaOverlay').style.display = 'flex';
   renderLista();
 }
 
-function fecharLista()       { document.getElementById('listaOverlay').style.display = 'none'; }
+function fecharLista() {
+  selecaoAtiva.clear();
+  document.getElementById('listaOverlay').style.display = 'none';
+}
 function fecharListaFora(e)  { if (e.target === document.getElementById('listaOverlay')) fecharLista(); }
 
 function filtrarLista() {
   listaFiltro = document.getElementById('listaSearch').value.toLowerCase().trim();
+  // Limpa seleção ao filtrar para evitar inconsistências
+  selecaoAtiva.clear();
+  renderLista();
+}
+
+/* ── Selecionar / desmarcar todas as VISÍVEIS ── */
+function toggleSelectAll(cb) {
+  if (cb.checked) {
+    placasVisiveis.forEach(p => selecaoAtiva.add(p));
+  } else {
+    selecaoAtiva.clear();
+  }
+  // Atualiza checkboxes individuais
+  placasVisiveis.forEach(p => {
+    const el = document.getElementById('cb-' + p);
+    if (el) el.checked = cb.checked;
+  });
+  // Atualiza highlight de linha
+  placasVisiveis.forEach(p => {
+    const row = document.getElementById('row-' + p);
+    if (row) row.classList.toggle('row-selected', cb.checked);
+  });
+  atualizarBulkBar();
+}
+
+/* ── Alternar seleção de uma placa individual ── */
+function togglePlaca(p, checked) {
+  if (checked) selecaoAtiva.add(p);
+  else selecaoAtiva.delete(p);
+
+  const row = document.getElementById('row-' + p);
+  if (row) row.classList.toggle('row-selected', checked);
+
+  atualizarEstadoCbAll();
+  atualizarBulkBar();
+}
+
+/* ── Atualiza o estado do checkbox "selecionar todas" ── */
+function atualizarEstadoCbAll() {
+  const cbAll = document.getElementById('cbSelectAll');
+  if (!cbAll) return;
+  const total = placasVisiveis.length;
+  const sel   = placasVisiveis.filter(p => selecaoAtiva.has(p)).length;
+  cbAll.checked = sel === total && total > 0;
+  cbAll.className = sel > 0 && sel < total ? 'indeterminate' : '';
+}
+
+/* ── Exibe/oculta a barra de ações em lote ── */
+function atualizarBulkBar() {
+  const n   = selecaoAtiva.size;
+  const bar = document.getElementById('bulkBar');
+  const lbl = document.getElementById('bulkCount');
+  if (n > 0) {
+    bar.classList.add('visible');
+    lbl.textContent = `${n} placa${n !== 1 ? 's' : ''} selecionada${n !== 1 ? 's' : ''}`;
+  } else {
+    bar.classList.remove('visible');
+  }
+}
+
+function limparSelecao() {
+  selecaoAtiva.clear();
+  renderLista();
+}
+
+/* ── Excluir todas as placas selecionadas ── */
+function excluirSelecionadas() {
+  const n = selecaoAtiva.size;
+  if (!n) return;
+  if (!confirm(`Excluir ${n} placa${n !== 1 ? 's' : ''} permanentemente? Todos os lançamentos serão perdidos.`)) return;
+
+  selecaoAtiva.forEach(p => delete placas[p]);
+  selecaoAtiva.clear();
+  salvar(); atualizarBadge();
+  toast(`${n} placa${n !== 1 ? 's excluídas' : ' excluída'}`, 'danger');
   renderLista();
 }
 
@@ -1131,14 +1330,25 @@ function renderLista() {
         d.plano.includes(listaFiltro))
     : todas;
 
-  // Ordena por placa
   filtradas.sort((a, b) => a[0].localeCompare(b[0]));
+
+  placasVisiveis = filtradas.map(([p]) => p);
 
   document.getElementById('listaCountLabel').textContent =
     `${filtradas.length} / ${todas.length} placa${todas.length !== 1 ? 's' : ''}`;
 
+  // Atualiza estado do checkbox "selecionar todas"
+  const cbAll = document.getElementById('cbSelectAll');
+  if (cbAll) {
+    const sel = placasVisiveis.filter(p => selecaoAtiva.has(p)).length;
+    cbAll.checked = sel === placasVisiveis.length && placasVisiveis.length > 0;
+    cbAll.className = sel > 0 && sel < placasVisiveis.length ? 'indeterminate' : '';
+  }
+
+  atualizarBulkBar();
+
   if (!filtradas.length) {
-    tbody.innerHTML = `<tr><td colspan="6" class="lista-empty">${listaFiltro ? 'Nenhuma placa encontrada para "' + listaFiltro + '"' : 'Nenhuma placa cadastrada'}</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7" class="lista-empty">${listaFiltro ? 'Nenhuma placa encontrada para "' + listaFiltro + '"' : 'Nenhuma placa cadastrada'}</td></tr>`;
     return;
   }
 
@@ -1146,14 +1356,20 @@ function renderLista() {
     const cor    = PLANO_COR[d.plano] || '#94a3b8';
     const venceu = cicloVencido(d.ativacao);
     const { fim } = cicloAtual(d.ativacao);
+    const checked = selecaoAtiva.has(p) ? 'checked' : '';
+    const rowSel  = selecaoAtiva.has(p) ? 'row-selected' : '';
 
-    // Conta usos no ciclo atual (todos os serviços)
     let usosTotal = 0;
     for (const s in d.usos) usosTotal += usosNoCiclo(d.usos[s], d.ativacao).length;
 
     const tipoIco = { leve:'🚗', moto:'🏍️', caminhao:'🚛', utilitario:'🚐' }[d.tipo] || '🚗';
 
-    return `<tr id="row-${p}">
+    return `<tr id="row-${p}" class="${rowSel}">
+      <td>
+        <div class="cb-wrap">
+          <input type="checkbox" id="cb-${p}" ${checked} onchange="togglePlaca('${p}', this.checked)">
+        </div>
+      </td>
       <td class="td-placa">${p}</td>
       <td class="td-tipo">${tipoIco} ${cap(d.tipo)}</td>
       <td><span class="td-plan-badge" style="background:${cor}20;color:${cor};border:1px solid ${cor}40">${d.plano.toUpperCase()}</span></td>
@@ -1174,7 +1390,6 @@ function renderLista() {
 }
 
 function editarPlaca(p) {
-  // Fecha qualquer edit aberto
   document.querySelectorAll('.edit-row').forEach(r => r.remove());
   document.querySelectorAll('.row-editing').forEach(r => r.classList.remove('row-editing'));
 
@@ -1183,7 +1398,6 @@ function editarPlaca(p) {
   if (!row) return;
   row.classList.add('row-editing');
 
-  // Opções de tipo e plano
   const tiposOpts = ['leve','moto','caminhao','utilitario']
     .map(t => `<option value="${t}" ${d.tipo === t ? 'selected' : ''}>${cap(t)}</option>`).join('');
 
@@ -1194,7 +1408,7 @@ function editarPlaca(p) {
   editRow.className = 'edit-row';
   editRow.id = 'editrow-' + p;
   editRow.innerHTML = `
-    <td colspan="6">
+    <td colspan="7">
       <div class="edit-fields">
         <select id="edit-tipo-${p}">${tiposOpts}</select>
         <select id="edit-plano-${p}">${planosOpts}</select>
@@ -1215,7 +1429,6 @@ function salvarEdicao(p) {
 
   if (!data) { toast('Informe a data de ativação','warning'); return; }
 
-  // Ajusta plano se incompatível com o tipo
   const planosDoTipo = Object.keys(PLANOS[tipo]);
   const planoFinal   = planosDoTipo.includes(plano) ? plano : planosDoTipo[0];
 
@@ -1239,6 +1452,7 @@ function cancelarEdicao(p) {
 
 function excluirPlaca(p) {
   if (!confirm(`Excluir a placa ${p} permanentemente? Todos os seus lançamentos serão perdidos.`)) return;
+  selecaoAtiva.delete(p);
   delete placas[p];
   salvar(); atualizarBadge();
   toast(`Placa ${p} excluída`, 'danger');
@@ -1246,14 +1460,12 @@ function excluirPlaca(p) {
 }
 
 function consultarDaLista(p) {
-  // Preenche o campo de placa e abre o modal de consulta
   document.getElementById('placa').value = p;
   onPlacaInput();
   fecharLista();
   renderConsult(p);
   document.getElementById('consultOverlay').style.display = 'flex';
 }
-
 
 function consultarPlaca() {
   const p = document.getElementById('placa').value.trim().toUpperCase();
@@ -1274,7 +1486,6 @@ function renderConsult(p) {
 
   document.getElementById('consultTitle').textContent = `🔍 ${p}`;
 
-  // Conta total de usos no ciclo
   let totalCiclo = 0;
   for (const s in d.usos) totalCiclo += usosNoCiclo(d.usos[s], d.ativacao).length;
 
@@ -1289,7 +1500,6 @@ function renderConsult(p) {
       ${totalCiclo > 0 ? `<button class="consult-clear-all" onclick="clearAllSvc('${p}')">🗑 Zerar tudo</button>` : ''}
     </div>`;
 
-  // Blocos por serviço
   const svcs = Object.keys(SVC_EM);
   const blocos = svcs.map(svc => {
     const lim      = (PLANOS[d.tipo][d.plano] || {})[svc] || 0;
@@ -1299,7 +1509,6 @@ function renderConsult(p) {
     const pct      = lim > 0 ? Math.round((noCiclo.length / lim) * 100) : 0;
     const countColor = noCiclo.length >= lim && lim > 0 ? '#ef4444' : noCiclo.length >= lim - 1 && lim > 0 ? '#f59e0b' : '#22c55e';
 
-    // Todas as entradas ordenadas (ciclo atual primeiro, depois anteriores)
     const allEntries = [
       ...noCiclo.map(iso => ({ iso, inCycle: true })),
       ...foraArr.map(iso => ({ iso, inCycle: false }))
@@ -1352,7 +1561,6 @@ function deleteEntry(p, svc, iso) {
   salvar();
   toast('Lançamento apagado', 'warning');
   renderConsult(p);
-  // Atualiza resultado principal se estiver mostrando a mesma placa
   if (document.getElementById('resultado').innerHTML) renderResFromPlate(p);
 }
 
@@ -1376,7 +1584,6 @@ function clearAllSvc(p) {
   renderResFromPlate(p);
 }
 
-// Re-renderiza o card de resultado se a placa consultada for a mesma que está ativa
 function renderResFromPlate(p) {
   const placoEl = document.getElementById('placa');
   if (placoEl && placoEl.value.toUpperCase().trim() === p && placas[p]) {
@@ -1387,7 +1594,6 @@ function renderResFromPlate(p) {
     renderRes(p, d, svc, total, lim, cicloVencido(d.ativacao) ? 'vencido' : lim === 0 ? 'nd' : 'ok');
   }
 }
-
 
 function exportarCSV() {
   const total = Object.keys(placas).length;
