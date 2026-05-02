@@ -20,6 +20,8 @@
     --red-dim:   rgba(239,68,68,0.12);
     --blue:      #3b82f6;
     --blue-dim:  rgba(59,130,246,0.12);
+    --purple:    #a855f7;
+    --purple-dim:rgba(168,85,247,0.12);
     --text:      #e2e8f0;
     --muted:     #64748b;
     --radius:    12px;
@@ -91,10 +93,12 @@
   }
 
   .btn-hdr:hover { color: var(--text); border-color: rgba(255,255,255,.2); }
-  .btn-hdr.green { color: var(--green); border-color: rgba(34,197,94,.35); background: var(--green-dim); }
-  .btn-hdr.green:hover { background: rgba(34,197,94,.2); }
-  .btn-hdr.blue  { color: var(--blue);  border-color: rgba(59,130,246,.35); background: var(--blue-dim); }
-  .btn-hdr.blue:hover  { background: rgba(59,130,246,.2); }
+  .btn-hdr.green  { color: var(--green);  border-color: rgba(34,197,94,.35);  background: var(--green-dim); }
+  .btn-hdr.green:hover  { background: rgba(34,197,94,.2); }
+  .btn-hdr.blue   { color: var(--blue);   border-color: rgba(59,130,246,.35); background: var(--blue-dim); }
+  .btn-hdr.blue:hover   { background: rgba(59,130,246,.2); }
+  .btn-hdr.purple { color: var(--purple); border-color: rgba(168,85,247,.35); background: var(--purple-dim); }
+  .btn-hdr.purple:hover { background: rgba(168,85,247,.2); }
 
   /* MAIN */
   .main { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; overflow: hidden; }
@@ -158,11 +162,19 @@
   .fgroup  { display: flex; flex-direction: column; gap: 3px; }
   .fgroup label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .8px; color: var(--muted); }
 
-  select { background: var(--surface); border: 1px solid var(--border); color: var(--text); border-radius: var(--radius-sm); padding: 7px 26px 7px 9px; font-family: 'Segoe UI', system-ui, sans-serif; font-size: 12px; cursor: pointer; outline: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2364748b' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; transition: border-color .2s; }
+  select { background: var(--surface); border: 1px solid var(--border); color: var(--text); border-radius: var(--radius-sm); padding: 7px 26px 7px 9px; font-family: 'Segoe UI', system-ui, sans-serif; font-size: 12px; cursor: pointer; outline: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2364748b' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; transition: border-color .2s; width: 100%; }
   select:focus { border-color: var(--amber); }
 
   input[type="date"] { background: var(--surface); border: 1px solid var(--border); color: var(--text); border-radius: var(--radius-sm); padding: 7px 9px; font-family: 'Segoe UI', system-ui, sans-serif; font-size: 12px; outline: none; width: 100%; transition: border-color .2s; color-scheme: dark; }
   input[type="date"]:focus { border-color: var(--amber); }
+
+  input[type="text"], input[type="number"] {
+    background: var(--surface); border: 1px solid var(--border); color: var(--text);
+    border-radius: var(--radius-sm); padding: 7px 9px;
+    font-family: 'Segoe UI', system-ui, sans-serif; font-size: 12px; outline: none;
+    width: 100%; transition: border-color .2s;
+  }
+  input[type="text"]:focus, input[type="number"]:focus { border-color: var(--amber); }
 
   /* BUTTONS */
   .btn { width: 100%; padding: 10px; border: none; border-radius: var(--radius-sm); font-family: 'Arial Narrow', 'Impact', Arial, sans-serif; font-size: .9rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all .15s; display: flex; align-items: center; justify-content: center; gap: 6px; }
@@ -173,6 +185,8 @@
   .btn-success:hover { background: #4ade80; }
   .btn-danger   { background: var(--red); color: #fff; }
   .btn-danger:hover  { background: #f87171; }
+  .btn-purple   { background: var(--purple); color: #fff; }
+  .btn-purple:hover  { background: #c084fc; }
 
   .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--muted); font-size: 10px; padding: 3px 9px; border-radius: var(--radius-sm); cursor: pointer; font-family: 'Segoe UI', system-ui, sans-serif; transition: all .15s; width: auto; font-weight: 600; }
   .btn-ghost:hover { color: var(--text); border-color: rgba(255,255,255,.2); }
@@ -275,13 +289,8 @@
 
   .imp-section-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin: 8px 0 4px; font-weight: 700; }
 
-  /* ══════════════════════════════════════
-     PLATES LIST MODAL — BULK SELECTION
-  ══════════════════════════════════════ */
-  .lista-toolbar {
-    display: flex; align-items: center; gap: 8px;
-    margin-bottom: 8px; flex-shrink: 0;
-  }
+  /* PLATES LIST MODAL */
+  .lista-toolbar { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-shrink: 0; }
 
   .lista-search {
     flex: 1; background: var(--surface2); border: 1px solid var(--border);
@@ -289,13 +298,11 @@
     padding: 7px 12px; font-family: 'Segoe UI', system-ui, sans-serif; font-size: 13px;
     outline: none; transition: border-color .2s;
   }
-
   .lista-search:focus { border-color: var(--amber); }
   .lista-search::placeholder { color: var(--muted); }
 
   .lista-count-label { font-size: 11px; color: var(--muted); white-space: nowrap; font-family: 'Courier New', Courier, monospace; }
 
-  /* Bulk action bar — só aparece quando há seleção */
   .bulk-bar {
     display: none; align-items: center; gap: 8px;
     background: rgba(239,68,68,.07); border: 1px solid rgba(239,68,68,.22);
@@ -304,10 +311,7 @@
   }
   .bulk-bar.visible { display: flex; }
 
-  .bulk-count {
-    font-family: 'Courier New', Courier, monospace; font-size: 12px;
-    font-weight: 700; color: var(--red); flex: 1;
-  }
+  .bulk-count { font-family: 'Courier New', Courier, monospace; font-size: 12px; font-weight: 700; color: var(--red); flex: 1; }
 
   .bulk-btn {
     display: flex; align-items: center; gap: 5px;
@@ -324,38 +328,26 @@
   .lista-table-wrap { overflow-y: auto; flex: 1; min-height: 0; }
 
   .lista-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-
   .lista-table thead tr { position: sticky; top: 0; z-index: 2; }
-
   .lista-table th {
     padding: 7px 10px; text-align: left;
     font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
-    color: var(--muted); background: var(--surface);
-    border-bottom: 1px solid var(--border);
+    color: var(--muted); background: var(--surface); border-bottom: 1px solid var(--border);
   }
-
   .lista-table th:first-child { width: 36px; text-align: center; }
   .lista-table th:last-child { text-align: center; }
-
-  .lista-table td {
-    padding: 8px 10px; border-bottom: 1px solid rgba(255,255,255,.03);
-    vertical-align: middle;
-  }
-
+  .lista-table td { padding: 8px 10px; border-bottom: 1px solid rgba(255,255,255,.03); vertical-align: middle; }
   .lista-table td:first-child { text-align: center; width: 36px; }
-
   .lista-table tr:hover td { background: rgba(255,255,255,.02); }
   .lista-table tr.row-selected td { background: rgba(239,68,68,.05) !important; }
   .lista-table tr:last-child td { border-bottom: none; }
 
-  /* Custom checkbox */
   .cb-wrap { display: flex; align-items: center; justify-content: center; }
   .cb-wrap input[type="checkbox"] { appearance: none; width: 14px; height: 14px; border: 1.5px solid var(--muted); border-radius: 3px; cursor: pointer; transition: all .15s; position: relative; flex-shrink: 0; }
   .cb-wrap input[type="checkbox"]:checked { background: var(--red); border-color: var(--red); }
   .cb-wrap input[type="checkbox"]:checked::after { content: '✓'; position: absolute; top: -1px; left: 1px; font-size: 10px; color: #fff; font-weight: 700; }
   .cb-wrap input[type="checkbox"]:hover { border-color: var(--text); }
 
-  /* Select-all checkbox in header */
   #cbSelectAll { appearance: none; width: 14px; height: 14px; border: 1.5px solid var(--muted); border-radius: 3px; cursor: pointer; transition: all .15s; position: relative; }
   #cbSelectAll:checked { background: var(--amber); border-color: var(--amber); }
   #cbSelectAll:checked::after { content: '✓'; position: absolute; top: -1px; left: 1px; font-size: 10px; color: #000; font-weight: 700; }
@@ -364,14 +356,10 @@
   #cbSelectAll:hover { border-color: var(--text); }
 
   .td-placa { font-family: 'Courier New', Courier, monospace; font-weight: 700; letter-spacing: 2px; font-size: 12px; }
-
   .td-plan-badge { display: inline-block; font-size: 9px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; padding: 2px 7px; border-radius: 20px; }
-
   .td-tipo  { font-size: 11px; color: var(--muted); }
   .td-ativ  { font-family: 'Courier New', Courier, monospace; font-size: 10px; color: var(--muted); }
-
   .td-cycle { text-align: center; }
-
   .cycle-ok  { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 4px rgba(34,197,94,.5); }
   .cycle-exp { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--red); box-shadow: 0 0 4px rgba(239,68,68,.5); animation: blink 1.2s infinite; }
 
@@ -384,42 +372,25 @@
     cursor: pointer; font-family: 'Segoe UI', system-ui, sans-serif;
     transition: all .15s; white-space: nowrap; background: transparent;
   }
-
   .act-btn.edit   { color: var(--amber); border-color: rgba(245,158,11,.3); }
   .act-btn.edit:hover { background: var(--amber-dim); }
   .act-btn.view   { color: var(--blue);  border-color: rgba(59,130,246,.3); }
   .act-btn.view:hover { background: var(--blue-dim); }
   .act-btn.del    { color: var(--red);   border-color: rgba(239,68,68,.3); }
   .act-btn.del:hover  { background: var(--red-dim); }
-
-  /* INLINE EDIT ROW */
-  .edit-row td {
-    background: rgba(245,158,11,.05) !important;
-    border-top: 1px solid rgba(245,158,11,.2);
-    border-bottom: 1px solid rgba(245,158,11,.2);
-  }
-
-  .edit-fields { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-
-  .edit-fields select, .edit-fields input[type="date"] {
-    font-size: 11px; padding: 5px 8px; background: var(--surface2); flex-shrink: 0;
-  }
-
-  .edit-fields input[type="date"] { width: 130px; }
-
-  .act-btn.save { color: var(--green); border-color: rgba(34,197,94,.3); }
+  .act-btn.save   { color: var(--green); border-color: rgba(34,197,94,.3); }
   .act-btn.save:hover { background: var(--green-dim); }
   .act-btn.cancel-edit { color: var(--muted); }
   .act-btn.cancel-edit:hover { background: var(--surface2); color: var(--text); }
 
+  .edit-row td { background: rgba(245,158,11,.05) !important; border-top: 1px solid rgba(245,158,11,.2); border-bottom: 1px solid rgba(245,158,11,.2); }
+  .edit-fields { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .edit-fields select, .edit-fields input[type="date"] { font-size: 11px; padding: 5px 8px; background: var(--surface2); flex-shrink: 0; }
+  .edit-fields input[type="date"] { width: 130px; }
   .lista-empty { text-align: center; padding: 3rem; color: var(--muted); font-size: 13px; }
 
   /* CONSULT MODAL */
-  .consult-plate-header {
-    display: flex; align-items: center; gap: 10px;
-    background: var(--surface2); border: 1px solid var(--border);
-    border-radius: var(--radius-sm); padding: 10px 14px; margin-bottom: 14px;
-  }
+  .consult-plate-header { display: flex; align-items: center; gap: 10px; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 14px; margin-bottom: 14px; }
   .consult-plate-val  { font-family: 'Courier New', Courier, monospace; font-size: 1.1rem; font-weight: 700; letter-spacing: 4px; }
   .consult-info-col   { display: flex; flex-direction: column; gap: 2px; font-size: 11px; color: var(--muted); }
   .consult-info-col strong { color: var(--text); font-weight: 700; }
@@ -436,10 +407,8 @@
   .svc-block-clear:hover { background: rgba(239,68,68,.15); }
   .svc-chev { color: var(--muted); font-size: 10px; transition: transform .2s; margin-left: 4px; }
   .svc-block.open .svc-chev { transform: rotate(180deg); }
-
   .svc-entries { display: none; padding: 0 8px 8px; flex-direction: column; gap: 5px; }
   .svc-block.open .svc-entries { display: flex; }
-
   .svc-entry { display: flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 7px 10px; }
   .entry-num  { font-family: 'Courier New', Courier, monospace; font-size: 10px; color: var(--muted); min-width: 18px; text-align: right; }
   .entry-date { font-family: 'Courier New', Courier, monospace; font-size: 11px; color: var(--text); flex: 1; }
@@ -447,6 +416,109 @@
   .entry-del  { background: transparent; border: none; color: var(--muted); cursor: pointer; font-size: 14px; padding: 2px 5px; border-radius: 4px; transition: all .15s; line-height: 1; flex-shrink: 0; }
   .entry-del:hover { color: var(--red); background: rgba(239,68,68,.12); }
   .svc-no-entries { font-size: 11px; color: var(--muted); text-align: center; padding: 10px; }
+
+  /* ══════════════════════════════════
+     CONFIG MODAL
+  ══════════════════════════════════ */
+  .cfg-tabs { display: flex; gap: 4px; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+  .cfg-tab {
+    font-size: 11px; font-weight: 700; padding: 6px 14px; border-radius: var(--radius-sm);
+    border: 1px solid var(--border); cursor: pointer; transition: all .15s;
+    color: var(--muted); background: transparent; letter-spacing: .5px; text-transform: uppercase;
+  }
+  .cfg-tab.active { color: var(--amber); border-color: rgba(245,158,11,.4); background: var(--amber-dim); }
+  .cfg-tab:hover:not(.active) { color: var(--text); background: var(--surface2); }
+
+  .cfg-pane { display: none; }
+  .cfg-pane.active { display: block; }
+
+  /* Tipos list */
+  .cfg-tipo-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+  .cfg-tipo-item {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 10px 12px;
+  }
+  .cfg-tipo-ico { font-size: 18px; }
+  .cfg-tipo-name { flex: 1; font-weight: 700; font-size: 13px; }
+  .cfg-tipo-id { font-family: 'Courier New', Courier, monospace; font-size: 10px; color: var(--muted); }
+  .cfg-tipo-plans { font-size: 10px; color: var(--muted); }
+  .cfg-tipo-builtin { font-size: 9px; font-weight: 700; color: var(--amber); background: var(--amber-dim); border: 1px solid rgba(245,158,11,.25); border-radius: 20px; padding: 2px 7px; text-transform: uppercase; letter-spacing: .5px; }
+
+  /* Add tipo form */
+  .cfg-add-box {
+    background: var(--surface2); border: 1px solid rgba(168,85,247,.2);
+    border-radius: var(--radius-sm); padding: 13px; margin-bottom: 14px; display: none;
+  }
+  .cfg-add-box.show { display: block; animation: slideDown .2s ease; }
+  .cfg-add-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--purple); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+
+  .cfg-row { display: grid; gap: 8px; margin-bottom: 8px; }
+  .cfg-row-2 { grid-template-columns: 1fr 1fr; }
+  .cfg-row-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .cfg-row-ico { grid-template-columns: 60px 1fr; }
+
+  /* Planos per type */
+  .cfg-plano-section { margin-bottom: 16px; }
+  .cfg-plano-section-title {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+    color: var(--text); margin-bottom: 8px; padding: 8px 10px;
+    background: var(--surface2); border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+  }
+  .cfg-plano-section-ico { font-size: 16px; }
+  .cfg-plano-section-label { flex: 1; }
+  .cfg-add-plano-btn {
+    font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: var(--radius-sm);
+    border: 1px solid rgba(168,85,247,.35); color: var(--purple); background: var(--purple-dim);
+    cursor: pointer; transition: all .15s; font-family: 'Segoe UI', system-ui, sans-serif;
+  }
+  .cfg-add-plano-btn:hover { background: rgba(168,85,247,.2); }
+
+  .cfg-plano-list { display: flex; flex-direction: column; gap: 5px; padding-left: 8px; }
+  .cfg-plano-item {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); overflow: hidden;
+  }
+  .cfg-plano-hd {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 11px; cursor: pointer; transition: background .15s;
+  }
+  .cfg-plano-hd:hover { background: rgba(255,255,255,.02); }
+  .cfg-plano-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .cfg-plano-name { flex: 1; font-weight: 700; font-size: 12px; }
+  .cfg-plano-id { font-family: 'Courier New', Courier, monospace; font-size: 10px; color: var(--muted); }
+  .cfg-plano-builtin { font-size: 9px; font-weight: 700; color: var(--muted); background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; padding: 1px 6px; text-transform: uppercase; letter-spacing: .5px; }
+  .cfg-plano-chev { color: var(--muted); font-size: 9px; transition: transform .2s; }
+  .cfg-plano-item.open .cfg-plano-chev { transform: rotate(180deg); }
+
+  .cfg-plano-body { display: none; padding: 10px 12px 12px; border-top: 1px solid var(--border); background: rgba(0,0,0,.15); }
+  .cfg-plano-item.open .cfg-plano-body { display: block; }
+
+  .svc-limits-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 8px; }
+  .svc-limit-item { display: flex; flex-direction: column; gap: 3px; }
+  .svc-limit-label { font-size: 9px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); font-weight: 700; text-align: center; }
+  .svc-limit-ico { font-size: 14px; text-align: center; }
+  .svc-limit-input {
+    background: var(--surface2); border: 1px solid var(--border); color: var(--text);
+    border-radius: 6px; padding: 5px 4px; font-family: 'Courier New', Courier, monospace;
+    font-size: 13px; font-weight: 700; text-align: center; outline: none; width: 100%;
+    transition: border-color .2s;
+  }
+  .svc-limit-input:focus { border-color: var(--amber); }
+  .svc-limit-input[value="0"] { color: var(--muted); }
+  .svc-limit-hint { font-size: 9px; color: var(--muted); text-align: center; }
+
+  .cfg-plano-actions { display: flex; gap: 6px; margin-top: 8px; }
+
+  /* NEW PLANO INLINE FORM */
+  .new-plano-form {
+    background: rgba(168,85,247,.05); border: 1px solid rgba(168,85,247,.2);
+    border-radius: var(--radius-sm); padding: 11px; margin-top: 6px; display: none;
+    animation: slideDown .2s ease;
+  }
+  .new-plano-form.show { display: block; }
 
   /* TOAST */
   .toasts { position: fixed; bottom: 16px; right: 16px; display: flex; flex-direction: column; gap: 6px; z-index: 9999; }
@@ -457,6 +529,11 @@
   .toast-success { background: var(--green-dim); border:1px solid rgba(34,197,94,.3); color: var(--green); }
   .toast-danger  { background: var(--red-dim);   border:1px solid rgba(239,68,68,.3);  color: var(--red); }
   .toast-warning { background: var(--amber-dim); border:1px solid rgba(245,158,11,.3); color: var(--amber); }
+  .toast-info    { background: var(--purple-dim);border:1px solid rgba(168,85,247,.3); color: var(--purple); }
+
+  /* Inline hint */
+  .hint-note { font-size: 10px; color: var(--muted); margin-top: 4px; line-height: 1.5; }
+  .hint-note strong { color: var(--amber); }
 </style>
 </head>
 <body>
@@ -477,8 +554,9 @@
       </div>
     </div>
     <div class="header-actions">
-      <button class="btn-hdr green" onclick="abrirImport()">⬆ Importar Base</button>
-      <button class="btn-hdr blue"  onclick="exportarCSV()">⬇ Exportar CSV</button>
+      <button class="btn-hdr purple" onclick="abrirConfig()">⚙ Configurações</button>
+      <button class="btn-hdr green"  onclick="abrirImport()">⬆ Importar Base</button>
+      <button class="btn-hdr blue"   onclick="exportarCSV()">⬇ Exportar CSV</button>
       <span class="badge-count" id="badgePlacas" onclick="abrirListaPlacas()" title="Ver todas as placas">0 placas</span>
     </div>
   </div>
@@ -504,36 +582,18 @@
           </div>
 
           <label class="field-label">Tipo de Serviço</label>
-          <div class="svc-grid">
-            <button class="svc-btn active" data-s="guincho"     onclick="selSvc(this)"><span class="svc-icon">🏗️</span><span class="svc-name">Guincho</span></button>
-            <button class="svc-btn"        data-s="bateria"     onclick="selSvc(this)"><span class="svc-icon">🔋</span><span class="svc-name">Bateria</span></button>
-            <button class="svc-btn"        data-s="pneu"        onclick="selSvc(this)"><span class="svc-icon">🛞</span><span class="svc-name">Pneu</span></button>
-            <button class="svc-btn"        data-s="combustivel" onclick="selSvc(this)"><span class="svc-icon">⛽</span><span class="svc-name">Combustível</span></button>
-            <button class="svc-btn"        data-s="chaveiro"    onclick="selSvc(this)"><span class="svc-icon">🔑</span><span class="svc-name">Chaveiro</span></button>
-            <button class="svc-btn"        data-s="taxi"        onclick="selSvc(this)"><span class="svc-icon">🚕</span><span class="svc-name">Táxi/Uber</span></button>
-            <button class="svc-btn"        data-s="hospedagem"  onclick="selSvc(this)"><span class="svc-icon">🏨</span><span class="svc-name">Hospedagem</span></button>
-          </div>
+          <div class="svc-grid" id="svcGrid"></div>
 
           <div class="cbox" id="cbox">
             <span class="nova-badge">✦ Nova placa detectada</span>
             <div class="sel-row">
               <div class="fgroup">
                 <label>Tipo de Veículo</label>
-                <select id="tipo">
-                  <option value="leve">🚗 Leve</option>
-                  <option value="moto">🏍️ Moto</option>
-                  <option value="caminhao">🚛 Caminhão</option>
-                  <option value="utilitario">🚐 Utilitário</option>
-                </select>
+                <select id="tipo" onchange="onTipoChange()"></select>
               </div>
               <div class="fgroup">
                 <label>Plano</label>
-                <select id="plano">
-                  <option value="ouro">⭐ Ouro</option>
-                  <option value="prata">🥈 Prata</option>
-                  <option value="bronze">🥉 Bronze</option>
-                  <option value="unico">🔷 Único</option>
-                </select>
+                <select id="plano"></select>
               </div>
             </div>
             <div class="fgroup" style="margin-bottom:7px">
@@ -570,6 +630,63 @@
   </div>
 </div>
 
+<!-- ══════════════════════════════════════════════
+     MODAL CONFIGURAÇÕES
+══════════════════════════════════════════════ -->
+<div class="modal-overlay" id="configOverlay" style="display:none" onclick="fecharConfigFora(event)">
+  <div class="modal" style="width:720px;max-height:88vh">
+    <div class="modal-header">
+      <span class="modal-title">⚙ Configurações de Planos e Tipos</span>
+      <button class="modal-close" onclick="fecharConfig()">✕</button>
+    </div>
+    <div class="modal-body" style="padding:16px 18px">
+
+      <div class="cfg-tabs">
+        <button class="cfg-tab active" onclick="cfgTab('tipos',this)">🚗 Tipos de Veículo</button>
+        <button class="cfg-tab"        onclick="cfgTab('planos',this)">📋 Planos e Limites</button>
+      </div>
+
+      <!-- PANE: TIPOS -->
+      <div class="cfg-pane active" id="cfgPaneTipos">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <span style="font-size:11px;color:var(--muted)">Tipos de veículo disponíveis para cadastro de placas</span>
+          <button class="btn-hdr purple" style="font-size:10px" onclick="toggleAddTipo()">+ Novo Tipo</button>
+        </div>
+
+        <div class="cfg-add-box" id="addTipoBox">
+          <div class="cfg-add-title">✦ Novo Tipo de Veículo</div>
+          <div class="cfg-row cfg-row-ico">
+            <div class="fgroup">
+              <label>Ícone</label>
+              <input type="text" id="novoTipoIco" placeholder="🚌" maxlength="4" style="text-align:center;font-size:1.3rem">
+            </div>
+            <div class="fgroup">
+              <label>Nome do tipo</label>
+              <input type="text" id="novoTipoNome" placeholder="Ex: Ônibus, Van, Micro-ônibus...">
+            </div>
+          </div>
+          <p class="hint-note">O <strong>ID interno</strong> é gerado automaticamente a partir do nome (ex: "Ônibus" → "onibus"). Ele é usado como chave interna e não pode ter espaços ou acentos.</p>
+          <div style="display:flex;gap:6px;margin-top:10px">
+            <button class="btn btn-purple" style="flex:1;margin-top:0" onclick="salvarNovoTipo()">✓ Criar Tipo</button>
+            <button class="btn" style="flex:0 0 auto;width:auto;padding:0 16px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);margin-top:0" onclick="toggleAddTipo()">Cancelar</button>
+          </div>
+        </div>
+
+        <div class="cfg-tipo-list" id="cfgTipoList"></div>
+
+        <p class="hint-note" style="margin-top:8px">🔒 Tipos <strong>padrão</strong> não podem ser excluídos, mas seus planos podem ser editados. Tipos criados por você podem ser removidos enquanto não houver placas vinculadas.</p>
+      </div>
+
+      <!-- PANE: PLANOS -->
+      <div class="cfg-pane" id="cfgPanePlanos">
+        <p style="font-size:11px;color:var(--muted);margin-bottom:12px">Configure os limites de cada serviço por tipo e plano. <strong style="color:var(--amber)">0</strong> = serviço não disponível neste plano.</p>
+        <div id="cfgPlanosBody"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <!-- MODAL IMPORTAR -->
 <div class="modal-overlay" id="modalOverlay" style="display:none" onclick="fecharModalFora(event)">
   <div class="modal">
@@ -594,7 +711,6 @@
         <div class="drop-sub">ou clique para selecionar o arquivo</div>
       </div>
 
-      <!-- MAPEAMENTO VISUAL -->
       <div class="map-section">
         <div class="map-section-title">📋 Colunas esperadas no arquivo</div>
         <div style="font-family:'Courier New',Courier,monospace;font-size:11px;color:var(--green);background:var(--surface);border-radius:var(--radius-sm);padding:8px 11px;margin-bottom:10px;letter-spacing:.5px">
@@ -617,10 +733,7 @@
           <div class="map-item"><span class="map-from">SUVs/PICKUPs Ford e Citroen</span><span class="map-arr">→</span><span class="map-to">leve</span></div>
           <div class="map-item"><span class="map-from">Importados</span><span class="map-arr">→</span><span class="map-to">leve</span></div>
           <div class="map-item"><span class="map-from">Carros Especiais</span><span class="map-arr">→</span><span class="map-to">leve</span></div>
-          <div class="map-item"><span class="map-from">Agregados com Placa</span><span class="map-arr">→</span><span class="map-to">leve</span></div>
-          <div class="map-item"><span class="map-from">Veículos Locação (uso particular/trabalho)</span><span class="map-arr">→</span><span class="map-to">leve</span></div>
           <div class="map-item"><span class="map-from">Motocicleta</span><span class="map-arr">→</span><span class="map-to">moto</span></div>
-          <div class="map-item"><span class="map-from">Motocicletas Especiais</span><span class="map-arr">→</span><span class="map-to">moto</span></div>
           <div class="map-item"><span class="map-from">CAMINHAO</span><span class="map-arr">→</span><span class="map-to">caminhao</span></div>
           <div class="map-item"><span class="map-from">Caminhões - Veículos Especiais</span><span class="map-arr">→</span><span class="map-to">caminhao</span></div>
           <div class="map-item"><span class="map-from">Utilitário/Motorhome/Foodtruck</span><span class="map-arr">→</span><span class="map-to">utilitario</span></div>
@@ -628,13 +741,11 @@
         <div style="font-size:10px;color:var(--muted);margin-top:8px">⚠ Registros com Data de Ativação em branco ou "-" usarão a data de hoje como padrão.</div>
       </div>
 
-      <!-- MODO IMPORT -->
       <div class="import-opts">
         <label><input type="radio" name="modoImport" value="merge" checked> Mesclar (mantém placas existentes)</label>
         <label><input type="radio" name="modoImport" value="replace"> Substituir tudo</label>
       </div>
 
-      <!-- RESULTADO -->
       <div class="import-result" id="importResult">
         <div class="imp-stats">
           <div class="imp-stat"><div class="imp-stat-n" id="impOk"   style="color:var(--green)">0</div><div class="imp-stat-l">Importadas</div></div>
@@ -663,7 +774,6 @@
         <input class="lista-search" id="listaSearch" placeholder="🔍  Buscar placa, plano ou tipo..." oninput="filtrarLista()">
         <span class="lista-count-label" id="listaCountLabel">—</span>
       </div>
-      <!-- BARRA DE AÇÃO EM LOTE -->
       <div class="bulk-bar" id="bulkBar">
         <span class="bulk-count" id="bulkCount">0 selecionadas</span>
         <button class="bulk-btn del" onclick="excluirSelecionadas()">✕ Excluir selecionadas</button>
@@ -703,105 +813,137 @@
 <div class="toasts" id="toasts"></div>
 
 <script>
-/* ═══════════════════════════════════════════
-   DADOS / CONSTANTES
-═══════════════════════════════════════════ */
-const PLANOS = {
-  leve:       { ouro:{guincho:9,bateria:2,pneu:2,hospedagem:1,combustivel:2,chaveiro:1,taxi:9}, prata:{guincho:6,bateria:2,pneu:2,combustivel:2,chaveiro:1,taxi:6}, bronze:{guincho:3,bateria:1,pneu:1,combustivel:1,chaveiro:1,taxi:3} },
-  moto:       { ouro:{guincho:6,bateria:2,combustivel:2,hospedagem:1,chaveiro:1,taxi:6}, prata:{guincho:3,bateria:2,combustivel:2,chaveiro:1,taxi:3}, bronze:{guincho:2,bateria:1,combustivel:1,chaveiro:1,taxi:2} },
-  caminhao:   { unico:{guincho:4,bateria:2,pneu:2,hospedagem:1,combustivel:2,chaveiro:1,taxi:4}, bronze:{guincho:3,bateria:1,pneu:1,combustivel:1,chaveiro:1,taxi:3} },
-  utilitario: { unico:{guincho:4,bateria:2,pneu:2,hospedagem:1,combustivel:2,chaveiro:1,taxi:4}, bronze:{guincho:3,bateria:1,pneu:1,combustivel:1,chaveiro:1,taxi:3} }
+/* ═══════════════════════════════════════
+   SERVIÇOS DISPONÍVEIS (fixos no sistema)
+═══════════════════════════════════════ */
+const TODOS_SVCS = [
+  { id:'guincho',     nome:'Guincho',     ico:'🏗️' },
+  { id:'bateria',     nome:'Bateria',     ico:'🔋' },
+  { id:'pneu',        nome:'Pneu',        ico:'🛞' },
+  { id:'combustivel', nome:'Combustível', ico:'⛽' },
+  { id:'chaveiro',    nome:'Chaveiro',    ico:'🔑' },
+  { id:'taxi',        nome:'Táxi/Uber',   ico:'🚕' },
+  { id:'hospedagem',  nome:'Hospedagem',  ico:'🏨' },
+];
+
+/* ═══════════════════════════════════════
+   DADOS PADRÃO BUILT-IN
+═══════════════════════════════════════ */
+const TIPOS_BUILTIN = ['leve','moto','caminhao','utilitario'];
+const PLANOS_BUILTIN = ['ouro','prata','bronze','unico'];
+
+const PLANOS_PADRAO = {
+  leve: {
+    ouro:   { guincho:9,  bateria:2, pneu:2, hospedagem:1, combustivel:2, chaveiro:1, taxi:9 },
+    prata:  { guincho:6,  bateria:2, pneu:2, combustivel:2, chaveiro:1, taxi:6 },
+    bronze: { guincho:3,  bateria:1, pneu:1, combustivel:1, chaveiro:1, taxi:3 }
+  },
+  moto: {
+    ouro:   { guincho:6, bateria:2, combustivel:2, hospedagem:1, chaveiro:1, taxi:6 },
+    prata:  { guincho:3, bateria:2, combustivel:2, chaveiro:1, taxi:3 },
+    bronze: { guincho:2, bateria:1, combustivel:1, chaveiro:1, taxi:2 }
+  },
+  caminhao: {
+    unico:  { guincho:4, bateria:2, pneu:2, hospedagem:1, combustivel:2, chaveiro:1, taxi:4 },
+    bronze: { guincho:3, bateria:1, pneu:1, combustivel:1, chaveiro:1, taxi:3 }
+  },
+  utilitario: {
+    unico:  { guincho:4, bateria:2, pneu:2, hospedagem:1, combustivel:2, chaveiro:1, taxi:4 },
+    bronze: { guincho:3, bateria:1, pneu:1, combustivel:1, chaveiro:1, taxi:3 }
+  }
 };
 
-// Mapeamento de planos do relatório → sistema
-const MAP_PLANO = {
-  '1 - plano ouro': 'ouro',
-  '2 - plano prata': 'prata',
-  '3 - plano bronze': 'bronze',
-  'plano único': 'unico',
-  'plano unico': 'unico',
-  'ouro': 'ouro', 'prata': 'prata', 'bronze': 'bronze', 'unico': 'unico', 'único': 'unico'
+const TIPOS_INFO_PADRAO = {
+  leve:       { nome:'Leve',       ico:'🚗' },
+  moto:       { nome:'Moto',       ico:'🏍️' },
+  caminhao:   { nome:'Caminhão',   ico:'🚛' },
+  utilitario: { nome:'Utilitário', ico:'🚐' },
 };
 
-// Mapeamento de categorias do relatório → tipo do sistema
-// Inclui variações com/sem acentos e nomes de marcas (Ford, Citroen, etc.)
-const MAP_CATEGORIA = {
-  // ── LEVE ──────────────────────────────────────────────────────────────────
-  'leves': 'leve',
-  'leve': 'leve',
-  'leves até 2000': 'leve',
-  'leves ate 2000': 'leve',
-  'leves ford e citroen': 'leve',
-  'leves ford e citroën': 'leve',
-  'leves ford': 'leve',
-  'leves citroen': 'leve',
-  'leves citroën': 'leve',
-  'leves app / veículo de trabalho': 'leve',
-  'leves app / veiculo de trabalho': 'leve',
-  'leves app/veiculo de trabalho': 'leve',
-  'leves app/veículo de trabalho': 'leve',
-  'suvs | pickups': 'leve',
-  'suvs/pickups': 'leve',
-  'suvs / pickups': 'leve',
-  'suvs|pickups': 'leve',
-  'suvs/pickups ford e citroen': 'leve',
-  'suvs/pickups ford e citroën': 'leve',
-  'suvs | pickups ford e citroen': 'leve',
-  'suvs | pickups ford e citroën': 'leve',
-  'suvs/pickups ford': 'leve',
-  'suvs/pickups citroen': 'leve',
-  'importados': 'leve',
-  'carros especiais': 'leve',
-  'carro especial': 'leve',
-  'agregados com placa': 'leve',
-  'veículos locação (uso particular/trabalho)': 'leve',
-  'veiculos locacao (uso particular/trabalho)': 'leve',
-  'veículos locação': 'leve',
-  'veiculos locacao': 'leve',
-  'veículo de locação': 'leve',
-  'veiculo de locacao': 'leve',
-  'locação': 'leve',
-  'locacao': 'leve',
-  // ── MOTO ──────────────────────────────────────────────────────────────────
-  'motocicleta': 'moto',
-  'motocicletas': 'moto',
-  'moto': 'moto',
-  'motocicletas especiais': 'moto',
-  'motocicleta especial': 'moto',
-  // ── CAMINHÃO ──────────────────────────────────────────────────────────────
-  'caminhao': 'caminhao',
-  'caminhão': 'caminhao',
-  'caminhoes': 'caminhao',
-  'caminhões': 'caminhao',
-  'caminhões - veículos especiais': 'caminhao',
-  'caminhoes - veiculos especiais': 'caminhao',
-  'caminhão - veículos especiais': 'caminhao',
-  'caminhao - veiculos especiais': 'caminhao',
-  // ── UTILITÁRIO ────────────────────────────────────────────────────────────
-  'utilitário/motorhome/foodtruck': 'utilitario',
-  'utilitario/motorhome/foodtruck': 'utilitario',
-  'utilitario': 'utilitario',
-  'utilitário': 'utilitario',
+const PLANOS_INFO_PADRAO = {
+  ouro:   { nome:'Ouro',   cor:'#f59e0b' },
+  prata:  { nome:'Prata',  cor:'#94a3b8' },
+  bronze: { nome:'Bronze', cor:'#b45309' },
+  unico:  { nome:'Único',  cor:'#3b82f6' },
 };
 
-const SVC_EM = { guincho:'🏗️', bateria:'🔋', pneu:'🛞', combustivel:'⛽', chaveiro:'🔑', taxi:'🚕', hospedagem:'🏨' };
-const PLANO_COR = { ouro:'#f59e0b', prata:'#94a3b8', bronze:'#b45309', unico:'#3b82f6' };
+/* ═══════════════════════════════════════
+   ESTADO — carregado do localStorage
+═══════════════════════════════════════ */
+function carregarConfigs() {
+  const raw = localStorage.getItem('configs_v2');
+  if (raw) {
+    try { return JSON.parse(raw); } catch(e) {}
+  }
+  // Default: copia os planos padrão
+  return {
+    tipos:  JSON.parse(JSON.stringify(TIPOS_INFO_PADRAO)),
+    planos: JSON.parse(JSON.stringify(PLANOS_PADRAO)),
+    planosInfo: JSON.parse(JSON.stringify(PLANOS_INFO_PADRAO)),
+  };
+}
 
+let configs  = carregarConfigs();
 let placas   = JSON.parse(localStorage.getItem('placas')) || {};
 let hist     = JSON.parse(localStorage.getItem('hist'))   || [];
-let svcAtivo = 'guincho';
+let svcAtivo = TODOS_SVCS[0].id;
 let cdTimer  = null;
-
-// Conjunto de placas selecionadas na lista (por placa string)
 let selecaoAtiva = new Set();
+let listaFiltro  = '';
+let placasVisiveis = [];
 
+function salvarConfigs() { localStorage.setItem('configs_v2', JSON.stringify(configs)); }
+
+/* helpers de configs */
+function getTipos()         { return configs.tipos; }
+function getTipoInfo(id)    { return configs.tipos[id] || { nome: id, ico: '🚗' }; }
+function getPlanosDoTipo(t) { return Object.keys(configs.planos[t] || {}); }
+function getLimites(tipo, plano) { return (configs.planos[tipo] || {})[plano] || {}; }
+function getLimite(tipo, plano, svc) { return ((configs.planos[tipo] || {})[plano] || {})[svc] || 0; }
+function getPlanoInfo(plano) { return configs.planosInfo[plano] || { nome: plano, cor: '#94a3b8' }; }
+
+/* ═══════════════════════════════════════
+   INIT UI
+═══════════════════════════════════════ */
 document.getElementById('dataAtivacao').valueAsDate = new Date();
+renderSvcGrid();
+renderSelects();
 atualizarBadge();
 renderHist();
 
-/* ═══════════════════════════════════════════
+function renderSvcGrid() {
+  const grid = document.getElementById('svcGrid');
+  grid.innerHTML = TODOS_SVCS.map(s => `
+    <button class="svc-btn ${s.id === svcAtivo ? 'active' : ''}" data-s="${s.id}" onclick="selSvc(this)">
+      <span class="svc-icon">${s.ico}</span>
+      <span class="svc-name">${s.nome}</span>
+    </button>`).join('');
+}
+
+function renderSelects() {
+  const tipoSel  = document.getElementById('tipo');
+  const planoSel = document.getElementById('plano');
+  const tipos = getTipos();
+  tipoSel.innerHTML = Object.entries(tipos)
+    .map(([id, t]) => `<option value="${id}">${t.ico} ${t.nome}</option>`).join('');
+  atualizarPlanosSelect();
+}
+
+function onTipoChange() { atualizarPlanosSelect(); }
+
+function atualizarPlanosSelect() {
+  const tipo  = document.getElementById('tipo').value;
+  const planoSel = document.getElementById('plano');
+  const planos = getPlanosDoTipo(tipo);
+  planoSel.innerHTML = planos.map(p => {
+    const info = getPlanoInfo(p);
+    return `<option value="${p}">${info.nome}</option>`;
+  }).join('');
+}
+
+/* ═══════════════════════════════════════
    CICLO DE ATIVAÇÃO
-═══════════════════════════════════════════ */
+═══════════════════════════════════════ */
 function cicloAtual(ativ) {
   const [ay, am, ad] = ativ.split('-').map(Number);
   const hoje = new Date(); hoje.setHours(0,0,0,0);
@@ -817,9 +959,9 @@ function usosNoCiclo(usos, ativ) {
   return usos.filter(d => { const dt = new Date(d); return dt >= inicio && dt < fim; });
 }
 
-/* ═══════════════════════════════════════════
+/* ═══════════════════════════════════════
    PLACA INPUT
-═══════════════════════════════════════════ */
+═══════════════════════════════════════ */
 function onPlacaInput() {
   const el = document.getElementById('placa');
   el.value = el.value.toUpperCase().replace(/[^A-Z0-9]/g,'');
@@ -838,14 +980,14 @@ function selSvc(btn) {
   svcAtivo = btn.dataset.s;
 }
 
-/* ═══════════════════════════════════════════
+/* ═══════════════════════════════════════
    PROCESSAR / CADASTRAR / REGISTRAR
-═══════════════════════════════════════════ */
+═══════════════════════════════════════ */
 function processar() {
   const p = document.getElementById('placa').value.trim();
   if (!p)          { toast('Digite a placa','warning'); return; }
   if (!validar(p)) { toast('Placa inválida — use ABC1234 ou ABC1D23','danger'); return; }
-  if (!placas[p])  { document.getElementById('cbox').classList.add('show'); return; }
+  if (!placas[p])  { renderSelects(); document.getElementById('cbox').classList.add('show'); return; }
   registrar(p);
 }
 
@@ -856,7 +998,7 @@ function cadastrar() {
   if (!data)       { toast('Informe a data de ativação','warning'); return; }
   const tipo  = document.getElementById('tipo').value;
   const plano = document.getElementById('plano').value;
-  const disp  = Object.keys(PLANOS[tipo]);
+  const disp  = getPlanosDoTipo(tipo);
   placas[p] = { tipo, plano: disp.includes(plano) ? plano : disp[0], ativacao: data, usos: {} };
   salvar(); atualizarBadge();
   document.getElementById('cbox').classList.remove('show');
@@ -875,7 +1017,7 @@ function registrar(p) {
 
   if (!d.usos[svc]) d.usos[svc] = [];
   const cicloUsos = usosNoCiclo(d.usos[svc], d.ativacao);
-  const lim       = (PLANOS[d.tipo][d.plano] || {})[svc] || 0;
+  const lim       = getLimite(d.tipo, d.plano, svc);
   const usados    = cicloUsos.length;
 
   if (lim === 0)     { toast('Serviço não disponível neste plano','danger');  renderRes(p,d,svc,usados,0,'nd');    return; }
@@ -898,17 +1040,19 @@ function renovarAno(p) {
   for (const s in d.usos) d.usos[s] = [];
   salvar();
   toast(`Ano renovado → ${fmtData(d.ativacao)}`, 'success');
-  renderRes(p, d, svcAtivo, 0, (PLANOS[d.tipo][d.plano]||{})[svcAtivo]||0, 'ok');
+  const lim = getLimite(d.tipo, d.plano, svcAtivo);
+  renderRes(p, d, svcAtivo, 0, lim, 'ok');
   startCountdown(p);
 }
 
-/* ═══════════════════════════════════════════
+/* ═══════════════════════════════════════
    RENDER RESULTADO
-═══════════════════════════════════════════ */
+═══════════════════════════════════════ */
 function renderRes(p, d, svc, total, lim, st) {
   const rest  = Math.max(0, lim - total);
   const pct   = lim > 0 ? Math.round((total / lim) * 100) : 100;
-  const cor   = PLANO_COR[d.plano] || '#94a3b8';
+  const planInfo = getPlanoInfo(d.plano);
+  const cor   = planInfo.cor || '#94a3b8';
   const pg    = pct >= 100 ? '#ef4444' : pct >= 80 ? '#f59e0b' : '#22c55e';
   const sc    = ({
     ok:      { dot:'#22c55e', bg:'rgba(34,197,94,.07)',   br:'rgba(34,197,94,.2)' },
@@ -916,6 +1060,9 @@ function renderRes(p, d, svc, total, lim, st) {
     nd:      { dot:'#64748b', bg:'rgba(100,116,139,.07)', br:'rgba(100,116,139,.2)' },
     vencido: { dot:'#ef4444', bg:'rgba(239,68,68,.07)',   br:'rgba(239,68,68,.4)' }
   })[st];
+
+  const svcInfo = TODOS_SVCS.find(s => s.id === svc) || { ico:'?', nome: svc };
+  const tipoInfo = getTipoInfo(d.tipo);
 
   const alerta = st==='lim' ? `<div class="alert-strip" style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#ef4444">⛔ Limite do ciclo esgotado</div>`
     : st==='nd'  ? `<div class="alert-strip" style="background:rgba(100,116,139,.1);border:1px solid rgba(100,116,139,.3);color:#94a3b8">— Serviço não incluso neste plano</div>`
@@ -929,12 +1076,12 @@ function renderRes(p, d, svc, total, lim, st) {
       <div class="rcard-head" style="background:${sc.bg}">
         <div class="sdot" style="background:${sc.dot};box-shadow:0 0 5px ${sc.dot}60"></div>
         <span class="rplate">${p}</span>
-        <span class="rplan" style="background:${cor}22;color:${cor};border:1px solid ${cor}44">${d.plano.toUpperCase()}</span>
+        <span class="rplan" style="background:${cor}22;color:${cor};border:1px solid ${cor}44">${planInfo.nome.toUpperCase()}</span>
       </div>
       <div class="rcard-body">
         <div class="rmeta">
-          <div class="mitem"><div class="mlabel">Tipo</div><div class="mval">${cap(d.tipo)}</div></div>
-          <div class="mitem"><div class="mlabel">Serviço</div><div class="mval">${SVC_EM[svc]} ${cap(svc)}</div></div>
+          <div class="mitem"><div class="mlabel">Tipo</div><div class="mval">${tipoInfo.ico} ${tipoInfo.nome}</div></div>
+          <div class="mitem"><div class="mlabel">Serviço</div><div class="mval">${svcInfo.ico} ${svcInfo.nome}</div></div>
           <div class="mitem"><div class="mlabel">Usos/Ciclo</div><div class="mval" style="color:${pg}">${total}/${lim}</div></div>
           <div class="mitem"><div class="mlabel">Restante</div><div class="mval">${rest}</div></div>
         </div>
@@ -967,9 +1114,9 @@ function renderRes(p, d, svc, total, lim, st) {
   st !== 'vencido' ? startCountdown(p) : stopCountdown();
 }
 
-/* ═══════════════════════════════════════════
+/* ═══════════════════════════════════════
    COUNTDOWN
-═══════════════════════════════════════════ */
+═══════════════════════════════════════ */
 function startCountdown(p) {
   stopCountdown();
   if (!placas[p]) return;
@@ -994,16 +1141,331 @@ function stopCountdown() { if (cdTimer) { clearInterval(cdTimer); cdTimer = null
 function setCD(id, val, u) { const e=document.getElementById(id); if(!e) return; e.textContent=val; e.className='cd-val'+(u?' urgent':''); }
 function pad(n) { return String(n).padStart(2,'0'); }
 
-/* ═══════════════════════════════════════════
+/* ═══════════════════════════════════════
+   ██████  CONFIG MODAL  ██████
+═══════════════════════════════════════ */
+function abrirConfig() {
+  document.getElementById('configOverlay').style.display = 'flex';
+  cfgTab('tipos', document.querySelector('.cfg-tab'));
+}
+
+function fecharConfig()      { document.getElementById('configOverlay').style.display = 'none'; }
+function fecharConfigFora(e) { if (e.target === document.getElementById('configOverlay')) fecharConfig(); }
+
+function cfgTab(tab, btn) {
+  document.querySelectorAll('.cfg-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.cfg-pane').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('cfgPane' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+  if (tab === 'tipos')  renderCfgTipos();
+  if (tab === 'planos') renderCfgPlanos();
+}
+
+/* ── RENDER TIPOS ── */
+function renderCfgTipos() {
+  const list = document.getElementById('cfgTipoList');
+  const tipos = getTipos();
+  const entries = Object.entries(tipos);
+
+  if (!entries.length) {
+    list.innerHTML = '<div class="lista-empty">Nenhum tipo cadastrado</div>';
+    return;
+  }
+
+  list.innerHTML = entries.map(([id, t]) => {
+    const builtin   = TIPOS_BUILTIN.includes(id);
+    const qtdPlanos = getPlanosDoTipo(id).length;
+    // Count plates using this type
+    const qtdPlacas = Object.values(placas).filter(p => p.tipo === id).length;
+
+    return `
+      <div class="cfg-tipo-item">
+        <span class="cfg-tipo-ico">${t.ico}</span>
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:7px">
+            <span class="cfg-tipo-name">${t.nome}</span>
+            ${builtin ? '<span class="cfg-tipo-builtin">padrão</span>' : ''}
+          </div>
+          <div style="display:flex;gap:10px;margin-top:2px">
+            <span class="cfg-tipo-id">ID: <code style="color:var(--amber)">${id}</code></span>
+            <span class="cfg-tipo-plans">${qtdPlanos} plano${qtdPlanos !== 1 ? 's' : ''}</span>
+            <span class="cfg-tipo-plans">${qtdPlacas} placa${qtdPlacas !== 1 ? 's' : ''}</span>
+          </div>
+        </div>
+        ${!builtin ? `
+          <button class="act-btn del" onclick="excluirTipo('${id}','${qtdPlacas}')">✕ Excluir</button>
+        ` : '<span style="font-size:10px;color:var(--muted)">—</span>'}
+      </div>`;
+  }).join('');
+}
+
+function toggleAddTipo() {
+  const box = document.getElementById('addTipoBox');
+  box.classList.toggle('show');
+  if (box.classList.contains('show')) {
+    document.getElementById('novoTipoNome').focus();
+  }
+}
+
+function slugify(s) {
+  return s.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9]/g,'_')
+    .replace(/_+/g,'_')
+    .replace(/^_|_$/g,'');
+}
+
+function salvarNovoTipo() {
+  const ico  = document.getElementById('novoTipoIco').value.trim() || '🚗';
+  const nome = document.getElementById('novoTipoNome').value.trim();
+
+  if (!nome) { toast('Informe o nome do tipo','warning'); return; }
+
+  const id = slugify(nome);
+  if (!id) { toast('Nome inválido para gerar ID','danger'); return; }
+  if (configs.tipos[id]) { toast(`Já existe um tipo com ID "${id}"`, 'danger'); return; }
+
+  configs.tipos[id] = { nome, ico };
+  // Cria estrutura de planos vazia para o novo tipo
+  if (!configs.planos[id]) configs.planos[id] = {};
+
+  salvarConfigs();
+  renderCfgTipos();
+  renderSelects();
+  toast(`Tipo "${nome}" criado! Agora configure os planos na aba "Planos e Limites".`, 'info');
+
+  document.getElementById('novoTipoNome').value = '';
+  document.getElementById('novoTipoIco').value  = '';
+  document.getElementById('addTipoBox').classList.remove('show');
+}
+
+function excluirTipo(id, qtdPlacas) {
+  if (qtdPlacas > 0) {
+    toast(`Não é possível excluir: ${qtdPlacas} placa(s) vinculada(s) a este tipo`, 'danger');
+    return;
+  }
+  if (!confirm(`Excluir o tipo "${configs.tipos[id].nome}" e todos seus planos?`)) return;
+  delete configs.tipos[id];
+  delete configs.planos[id];
+  salvarConfigs();
+  renderCfgTipos();
+  renderSelects();
+  toast('Tipo excluído', 'danger');
+}
+
+/* ── RENDER PLANOS ── */
+function renderCfgPlanos() {
+  const body  = document.getElementById('cfgPlanosBody');
+  const tipos = getTipos();
+
+  body.innerHTML = Object.entries(tipos).map(([tipoId, tipoInfo]) => {
+    const planos = getPlanosDoTipo(tipoId);
+
+    const planosHtml = planos.length === 0
+      ? `<div class="svc-no-entries" style="margin:6px 0 0 8px">Nenhum plano configurado ainda</div>`
+      : planos.map(planoId => renderCfgPlanoItem(tipoId, planoId)).join('');
+
+    return `
+      <div class="cfg-plano-section">
+        <div class="cfg-plano-section-title">
+          <span class="cfg-plano-section-ico">${tipoInfo.ico}</span>
+          <span class="cfg-plano-section-label">${tipoInfo.nome}</span>
+          <button class="cfg-add-plano-btn" onclick="toggleNewPlanoForm('${tipoId}')">+ Novo Plano</button>
+        </div>
+        <div class="cfg-plano-list" id="planoList-${tipoId}">
+          ${planosHtml}
+        </div>
+        <div class="new-plano-form" id="newPlanoForm-${tipoId}">
+          ${renderNewPlanoForm(tipoId)}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function renderCfgPlanoItem(tipoId, planoId) {
+  const info    = getPlanoInfo(planoId);
+  const limites = getLimites(tipoId, planoId);
+  const builtin = TIPOS_BUILTIN.includes(tipoId) && PLANOS_BUILTIN.includes(planoId);
+  const cor     = info.cor || '#94a3b8';
+
+  const svcInputs = TODOS_SVCS.map(s => `
+    <div class="svc-limit-item">
+      <div class="svc-limit-ico">${s.ico}</div>
+      <div class="svc-limit-label">${s.nome.replace('Táxi/Uber','Táxi')}</div>
+      <input class="svc-limit-input" type="number" min="0" max="99" 
+        id="lim-${tipoId}-${planoId}-${s.id}"
+        value="${limites[s.id] || 0}"
+        oninput="this.style.color = this.value == 0 ? 'var(--muted)' : 'var(--text)';"
+        style="color:${(limites[s.id] || 0) == 0 ? 'var(--muted)' : 'var(--text)'}">
+      <div class="svc-limit-hint">0 = desativado</div>
+    </div>`).join('');
+
+  return `
+    <div class="cfg-plano-item" id="cfgplano-${tipoId}-${planoId}">
+      <div class="cfg-plano-hd" onclick="toggleCfgPlano('${tipoId}','${planoId}')">
+        <div class="cfg-plano-dot" style="background:${cor}"></div>
+        <span class="cfg-plano-name" style="color:${cor}">${info.nome}</span>
+        <span class="cfg-plano-id">ID: ${planoId}</span>
+        ${builtin ? '<span class="cfg-plano-builtin">padrão</span>' : ''}
+        <span class="cfg-plano-chev">▼</span>
+      </div>
+      <div class="cfg-plano-body">
+        <div class="svc-limits-grid">${svcInputs}</div>
+        <div class="cfg-plano-actions">
+          <button class="act-btn save" onclick="salvarLimites('${tipoId}','${planoId}')">✓ Salvar limites</button>
+          ${!builtin ? `<button class="act-btn del" onclick="excluirPlano('${tipoId}','${planoId}')">✕ Excluir plano</button>` : ''}
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderNewPlanoForm(tipoId) {
+  return `
+    <div style="margin-bottom:10px">
+      <div class="cfg-add-title" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--purple);margin-bottom:8px;display:flex;align-items:center;gap:6px">
+        ✦ Novo Plano para ${getTipoInfo(tipoId).nome}
+      </div>
+      <div class="cfg-row cfg-row-2" style="margin-bottom:8px">
+        <div class="fgroup">
+          <label>Nome do Plano</label>
+          <input type="text" id="nPNome-${tipoId}" placeholder="Ex: Diamante, Premium...">
+        </div>
+        <div class="fgroup">
+          <label>Cor do plano</label>
+          <input type="text" id="nPCor-${tipoId}" placeholder="#8b5cf6" style="font-family:'Courier New',Courier,monospace">
+        </div>
+      </div>
+      <p class="hint-note" style="margin-bottom:8px">ID gerado a partir do nome. Configure os limites de cada serviço abaixo:</p>
+      <div class="svc-limits-grid" style="margin-bottom:10px">
+        ${TODOS_SVCS.map(s => `
+          <div class="svc-limit-item">
+            <div class="svc-limit-ico">${s.ico}</div>
+            <div class="svc-limit-label">${s.nome.replace('Táxi/Uber','Táxi')}</div>
+            <input class="svc-limit-input" type="number" min="0" max="99"
+              id="nPLim-${tipoId}-${s.id}" value="0" style="color:var(--muted)"
+              oninput="this.style.color = this.value == 0 ? 'var(--muted)' : 'var(--text)';">
+            <div class="svc-limit-hint">0 = desativado</div>
+          </div>`).join('')}
+      </div>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-purple" style="flex:1;margin-top:0" onclick="salvarNovoPlano('${tipoId}')">✓ Criar Plano</button>
+        <button class="btn" style="flex:0 0 auto;width:auto;padding:0 16px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);margin-top:0" onclick="toggleNewPlanoForm('${tipoId}')">Cancelar</button>
+      </div>
+    </div>`;
+}
+
+function toggleCfgPlano(tipoId, planoId) {
+  document.getElementById(`cfgplano-${tipoId}-${planoId}`).classList.toggle('open');
+}
+
+function toggleNewPlanoForm(tipoId) {
+  const el = document.getElementById(`newPlanoForm-${tipoId}`);
+  el.classList.toggle('show');
+  if (el.classList.contains('show')) {
+    document.getElementById(`nPNome-${tipoId}`).focus();
+  }
+}
+
+function salvarLimites(tipoId, planoId) {
+  if (!configs.planos[tipoId]) configs.planos[tipoId] = {};
+  if (!configs.planos[tipoId][planoId]) configs.planos[tipoId][planoId] = {};
+
+  TODOS_SVCS.forEach(s => {
+    const el = document.getElementById(`lim-${tipoId}-${planoId}-${s.id}`);
+    configs.planos[tipoId][planoId][s.id] = el ? Math.max(0, parseInt(el.value) || 0) : 0;
+  });
+
+  salvarConfigs();
+  toast(`Limites do plano "${getPlanoInfo(planoId).nome}" salvos!`, 'success');
+}
+
+function salvarNovoPlano(tipoId) {
+  const nome = document.getElementById(`nPNome-${tipoId}`).value.trim();
+  const cor  = document.getElementById(`nPCor-${tipoId}`).value.trim() || '#94a3b8';
+
+  if (!nome) { toast('Informe o nome do plano','warning'); return; }
+
+  const id = slugify(nome);
+  if (!id) { toast('Nome inválido','danger'); return; }
+
+  if (configs.planos[tipoId] && configs.planos[tipoId][id]) {
+    toast(`Já existe um plano com ID "${id}" para este tipo`, 'danger'); return;
+  }
+
+  // Salva info do plano (global)
+  if (!configs.planosInfo[id]) {
+    configs.planosInfo[id] = { nome, cor };
+  }
+
+  // Salva limites
+  if (!configs.planos[tipoId]) configs.planos[tipoId] = {};
+  configs.planos[tipoId][id] = {};
+
+  TODOS_SVCS.forEach(s => {
+    const el = document.getElementById(`nPLim-${tipoId}-${s.id}`);
+    configs.planos[tipoId][id][s.id] = el ? Math.max(0, parseInt(el.value) || 0) : 0;
+  });
+
+  salvarConfigs();
+  toast(`Plano "${nome}" criado para ${getTipoInfo(tipoId).nome}!`, 'success');
+  toggleNewPlanoForm(tipoId);
+  renderCfgPlanos();
+  renderSelects();
+}
+
+function excluirPlano(tipoId, planoId) {
+  const usandoPlano = Object.values(placas).filter(p => p.tipo === tipoId && p.plano === planoId).length;
+  if (usandoPlano > 0) {
+    toast(`${usandoPlano} placa(s) usam este plano — não é possível excluir`, 'danger');
+    return;
+  }
+  if (!confirm(`Excluir o plano "${getPlanoInfo(planoId).nome}" de ${getTipoInfo(tipoId).nome}?`)) return;
+  delete configs.planos[tipoId][planoId];
+  salvarConfigs();
+  renderCfgPlanos();
+  renderSelects();
+  toast('Plano excluído', 'danger');
+}
+
+/* ═══════════════════════════════════════
    IMPORTAÇÃO EXCEL / CSV
-═══════════════════════════════════════════ */
+═══════════════════════════════════════ */
+const MAP_PLANO = {
+  '1 - plano ouro': 'ouro', '2 - plano prata': 'prata', '3 - plano bronze': 'bronze',
+  'plano único': 'unico', 'plano unico': 'unico',
+  'ouro': 'ouro', 'prata': 'prata', 'bronze': 'bronze', 'unico': 'unico', 'único': 'unico'
+};
+
+const MAP_CATEGORIA = {
+  'leves':'leve','leve':'leve','leves até 2000':'leve','leves ate 2000':'leve',
+  'leves ford e citroen':'leve','leves ford e citroën':'leve',
+  'leves ford':'leve','leves citroen':'leve','leves citroën':'leve',
+  'leves app / veículo de trabalho':'leve','leves app / veiculo de trabalho':'leve',
+  'leves app/veiculo de trabalho':'leve','leves app/veículo de trabalho':'leve',
+  'suvs | pickups':'leve','suvs/pickups':'leve','suvs / pickups':'leve','suvs|pickups':'leve',
+  'suvs/pickups ford e citroen':'leve','suvs/pickups ford e citroën':'leve',
+  'suvs | pickups ford e citroen':'leve','suvs | pickups ford e citroën':'leve',
+  'suvs/pickups ford':'leve','suvs/pickups citroen':'leve',
+  'importados':'leve','carros especiais':'leve','carro especial':'leve',
+  'agregados com placa':'leve',
+  'veículos locação (uso particular/trabalho)':'leve','veiculos locacao (uso particular/trabalho)':'leve',
+  'veículos locação':'leve','veiculos locacao':'leve','veículo de locação':'leve',
+  'veiculo de locacao':'leve','locação':'leve','locacao':'leve',
+  'motocicleta':'moto','motocicletas':'moto','moto':'moto',
+  'motocicletas especiais':'moto','motocicleta especial':'moto',
+  'caminhao':'caminhao','caminhão':'caminhao','caminhoes':'caminhao','caminhões':'caminhao',
+  'caminhões - veículos especiais':'caminhao','caminhoes - veiculos especiais':'caminhao',
+  'caminhão - veículos especiais':'caminhao','caminhao - veiculos especiais':'caminhao',
+  'utilitário/motorhome/foodtruck':'utilitario','utilitario/motorhome/foodtruck':'utilitario',
+  'utilitario':'utilitario','utilitário':'utilitario',
+};
+
 function abrirImport() {
   document.getElementById('modalOverlay').style.display = 'flex';
   document.getElementById('importResult').classList.remove('show');
 }
-
-function fecharModal()       { document.getElementById('modalOverlay').style.display = 'none'; }
-function fecharModalFora(e)  { if (e.target === document.getElementById('modalOverlay')) fecharModal(); }
+function fecharModal()      { document.getElementById('modalOverlay').style.display = 'none'; }
+function fecharModalFora(e) { if (e.target === document.getElementById('modalOverlay')) fecharModal(); }
 
 function onDrop(e) {
   e.preventDefault();
@@ -1019,59 +1481,47 @@ function onFileSelect(e) {
 
 function lerArquivo(file) {
   const nome = file.name.toLowerCase();
-
   if (nome.endsWith('.csv') || nome.endsWith('.txt')) {
     const reader = new FileReader();
     reader.onload = e => importarCSV(e.target.result);
     reader.readAsText(file, 'UTF-8');
     return;
   }
-
   if (nome.endsWith('.xls') || nome.endsWith('.xlsx')) {
-    const carregarEProcessar = () => {
+    const processar = () => {
       const reader = new FileReader();
       reader.onload = e => {
         try {
-          const wb   = XLSX.read(e.target.result, { type: 'array', cellDates: false });
+          const wb   = XLSX.read(e.target.result, { type:'array', cellDates:false });
           const ws   = wb.Sheets[wb.SheetNames[0]];
-          const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '', raw: true });
+          const rows = XLSX.utils.sheet_to_json(ws, { header:1, defval:'', raw:true });
           importarLinhas(rows);
-        } catch(err) {
-          toast('Erro ao ler o arquivo — verifique se não está corrompido', 'danger');
-          console.error(err);
-        }
+        } catch(err) { toast('Erro ao ler o arquivo','danger'); console.error(err); }
       };
       reader.readAsArrayBuffer(file);
     };
-
-    if (typeof XLSX !== 'undefined') {
-      carregarEProcessar();
-    } else {
-      toast('Carregando biblioteca Excel...', 'warning');
-      const script = document.createElement('script');
-      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
-      script.onload  = () => carregarEProcessar();
-      script.onerror = () => toast('Não foi possível carregar a biblioteca Excel. Verifique sua conexão com a internet e tente novamente.', 'danger');
-      document.head.appendChild(script);
+    if (typeof XLSX !== 'undefined') { processar(); }
+    else {
+      toast('Carregando biblioteca Excel...','warning');
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+      s.onload = processar;
+      s.onerror = () => toast('Falha ao carregar biblioteca Excel','danger');
+      document.head.appendChild(s);
     }
     return;
   }
-
-  toast('Formato não suportado. Use .xlsx, .xls ou .csv', 'danger');
+  toast('Formato não suportado. Use .xlsx, .xls ou .csv','danger');
 }
 
-/* ─── EXCEL: parse rows ─── */
 function importarLinhas(rows) {
   let hIdx = -1;
   for (let i = 0; i < Math.min(5, rows.length); i++) {
-    const r = rows[i].map(c => String(c).toLowerCase().trim());
-    if (r.some(c => c === 'placa')) { hIdx = i; break; }
+    if (rows[i].map(c => String(c).toLowerCase().trim()).some(c => c === 'placa')) { hIdx = i; break; }
   }
-
-  if (hIdx === -1) { toast('Cabeçalho "Placa" não encontrado no arquivo','danger'); return; }
+  if (hIdx === -1) { toast('Cabeçalho "Placa" não encontrado','danger'); return; }
 
   const header = rows[hIdx].map(c => String(c).toLowerCase().trim());
-
   const iPlaca = header.findIndex(c => c === 'placa');
   const iData  = header.findIndex(c => c.includes('ativa'));
   const iPlano = header.findIndex(c => c.includes('plano') || c === 'planos');
@@ -1079,60 +1529,41 @@ function importarLinhas(rows) {
 
   if (iPlaca === -1) { toast('Coluna "Placa" não encontrada','danger'); return; }
 
-  const modo   = document.querySelector('input[name="modoImport"]:checked').value;
+  const modo = document.querySelector('input[name="modoImport"]:checked').value;
   if (modo === 'replace') placas = {};
 
-  let ok = 0, skip = 0, semData = 0, erros = 0;
-  const errosList = [], semDataList = [];
+  let ok=0, skip=0, semData=0, erros=0;
+  const errosList=[], semDataList=[];
   const hoje = new Date().toISOString().slice(0,10);
 
-  for (let i = hIdx + 1; i < rows.length; i++) {
-    const row = rows[i];
-    const placa = String(row[iPlaca] || '').toUpperCase().trim();
+  for (let i = hIdx+1; i < rows.length; i++) {
+    const row   = rows[i];
+    const placa = String(row[iPlaca]||'').toUpperCase().trim();
     if (!placa) continue;
-
-    if (!validar(placa)) {
-      errosList.push(`Linha ${i+1}: placa inválida — "${placa}"`); erros++; continue;
-    }
-
+    if (!validar(placa)) { errosList.push(`Linha ${i+1}: placa inválida — "${placa}"`); erros++; continue; }
     if (modo === 'merge' && placas[placa]) { skip++; continue; }
 
-    // PLANO
-    const planoRaw = String(row[iPlano] || '').toLowerCase().trim();
+    const planoRaw = String(row[iPlano]||'').toLowerCase().trim();
     const plano    = MAP_PLANO[planoRaw] || null;
-    if (!plano) {
-      errosList.push(`Linha ${i+1} (${placa}): plano desconhecido — "${row[iPlano]}"`); erros++; continue;
-    }
+    if (!plano) { errosList.push(`Linha ${i+1} (${placa}): plano desconhecido — "${row[iPlano]}"`); erros++; continue; }
 
-    // TIPO via categoria — usa normalizeCategoria para match flexível
-    const catRaw = String(row[iCat] || '').trim();
+    const catRaw = String(row[iCat]||'').trim();
     const tipo   = resolverCategoria(catRaw);
-    if (!tipo) {
-      errosList.push(`Linha ${i+1} (${placa}): categoria desconhecida — "${catRaw}"`); erros++; continue;
-    }
+    if (!tipo) { errosList.push(`Linha ${i+1} (${placa}): categoria desconhecida — "${catRaw}"`); erros++; continue; }
 
-    const planosDoTipo = Object.keys(PLANOS[tipo]);
+    const planosDoTipo = getPlanosDoTipo(tipo);
     const planoFinal   = planosDoTipo.includes(plano) ? plano : planosDoTipo[0];
 
-    // DATA
-    const dataRaw = String(row[iData] || '').trim();
-    let ativacao  = hoje;
-    let usouPadrao = false;
-
+    const dataRaw = String(row[iData]||'').trim();
+    let ativacao  = hoje, usouPadrao = false;
     if (dataRaw && dataRaw !== '-' && dataRaw !== '') {
       const parsed = parsarData(dataRaw);
-      if (parsed) { ativacao = parsed; }
-      else { ativacao = hoje; usouPadrao = true; }
-    } else {
-      usouPadrao = true;
-    }
+      if (parsed) { ativacao = parsed; } else { ativacao = hoje; usouPadrao = true; }
+    } else { usouPadrao = true; }
 
-    if (usouPadrao) {
-      semDataList.push(`${placa}: sem data → usando ${fmtData(hoje)}`);
-      semData++;
-    }
+    if (usouPadrao) { semDataList.push(`${placa}: sem data → usando ${fmtData(hoje)}`); semData++; }
 
-    placas[placa] = { tipo, plano: planoFinal, ativacao, usos: {} };
+    placas[placa] = { tipo, plano: planoFinal, ativacao, usos:{} };
     ok++;
   }
 
@@ -1140,34 +1571,22 @@ function importarLinhas(rows) {
   mostrarResultadoImport(ok, skip, semData, erros, semDataList, errosList);
 }
 
-/* ─── Resolver categoria com normalização flexível ─── */
 function resolverCategoria(raw) {
   if (!raw) return null;
-  // Tenta match exato primeiro (case-insensitive + sem acento)
   const key = raw.toLowerCase().trim();
   if (MAP_CATEGORIA[key]) return MAP_CATEGORIA[key];
-
-  // Normaliza: remove acentos, múltiplos espaços
-  const norm = key
-    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')  // remove acentos
-    .replace(/\s+/g, ' ').trim();
-
+  const norm = key.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim();
   for (const [k, v] of Object.entries(MAP_CATEGORIA)) {
-    const kn = k.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g,' ').trim();
+    const kn = k.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim();
     if (kn === norm) return v;
   }
-
-  // Fallback por prefixo (ex: "Leves Ford e Fiat" não está no map mas começa com "leves")
-  if (norm.startsWith('leve')) return 'leve';
-  if (norm.startsWith('suv') || norm.startsWith('pickup')) return 'leve';
+  if (norm.startsWith('leve') || norm.startsWith('suv') || norm.startsWith('pickup')) return 'leve';
   if (norm.startsWith('moto')) return 'moto';
-  if (norm.startsWith('caminhao') || norm.startsWith('caminhao')) return 'caminhao';
+  if (norm.startsWith('caminhao') || norm.startsWith('caminhão')) return 'caminhao';
   if (norm.startsWith('utilitari')) return 'utilitario';
-
   return null;
 }
 
-/* ─── CSV: parse text ─── */
 function importarCSV(texto) {
   const linhas = texto.replace(/^\uFEFF/,'').replace(/\r\n/g,'\n').replace(/\r/g,'\n').split('\n');
   const sep    = linhas[0].includes(';') ? ';' : ',';
@@ -1175,56 +1594,37 @@ function importarCSV(texto) {
   importarLinhas(rows);
 }
 
-/* ─── PARSER DE DATA ─── */
 function parsarData(str) {
   str = String(str).trim();
-
   if (/^\d{4,5}$/.test(str)) {
-    const serial = parseInt(str, 10);
-    const dt = new Date((serial - 25569) * 86400 * 1000);
-    if (!isNaN(dt.getTime())) return dt.toISOString().slice(0, 10);
+    const dt = new Date((parseInt(str,10) - 25569) * 86400 * 1000);
+    if (!isNaN(dt.getTime())) return dt.toISOString().slice(0,10);
   }
-
   const m1 = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
   if (m1) return `${m1[3]}-${m1[2].padStart(2,'0')}-${m1[1].padStart(2,'0')}`;
   if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
   const m3 = str.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
   if (m3) return `${m3[3]}-${m3[2].padStart(2,'0')}-${m3[1].padStart(2,'0')}`;
-
   return null;
 }
 
-/* ─── RESULTADO DA IMPORTAÇÃO ─── */
 function mostrarResultadoImport(ok, skip, semData, erros, semDataList, errosList) {
   document.getElementById('impOk').textContent   = ok;
   document.getElementById('impSkip').textContent = skip;
   document.getElementById('impWarn').textContent = semData;
   document.getElementById('impErr').textContent  = erros;
-
-  let wHtml = '', eHtml = '';
-  if (semDataList.length) {
-    wHtml = `<div class="imp-section-label">⚠ Data padrão usada (hoje)</div>
-      <div class="imp-warn-list">${semDataList.map(w=>`<div class="imp-warn-row">${w}</div>`).join('')}</div>`;
-  }
-  if (errosList.length) {
-    eHtml = `<div class="imp-section-label">✕ Erros de validação</div>
-      <div class="imp-warn-list">${errosList.map(e=>`<div class="imp-err-row">${e}</div>`).join('')}</div>`;
-  }
-
+  let wHtml='', eHtml='';
+  if (semDataList.length) wHtml = `<div class="imp-section-label">⚠ Data padrão usada (hoje)</div><div class="imp-warn-list">${semDataList.map(w=>`<div class="imp-warn-row">${w}</div>`).join('')}</div>`;
+  if (errosList.length)   eHtml = `<div class="imp-section-label">✕ Erros de validação</div><div class="imp-warn-list">${errosList.map(e=>`<div class="imp-err-row">${e}</div>`).join('')}</div>`;
   document.getElementById('impWarnList').innerHTML = wHtml;
   document.getElementById('impErrList').innerHTML  = eHtml;
   document.getElementById('importResult').classList.add('show');
-
   toast(`${ok} placas importadas${erros ? ` · ${erros} erros` : ''}`, erros > 0 ? 'warning' : 'success');
 }
 
-/* ═══════════════════════════════════════════
-   LISTA DE PLACAS — BULK SELECT
-═══════════════════════════════════════════ */
-let listaFiltro = '';
-// Placas visíveis atualmente (após filtro), para "selecionar todas"
-let placasVisiveis = [];
-
+/* ═══════════════════════════════════════
+   LISTA DE PLACAS
+═══════════════════════════════════════ */
 function abrirListaPlacas() {
   listaFiltro = '';
   selecaoAtiva.clear();
@@ -1233,158 +1633,115 @@ function abrirListaPlacas() {
   renderLista();
 }
 
-function fecharLista() {
-  selecaoAtiva.clear();
-  document.getElementById('listaOverlay').style.display = 'none';
-}
-function fecharListaFora(e)  { if (e.target === document.getElementById('listaOverlay')) fecharLista(); }
+function fecharLista()      { selecaoAtiva.clear(); document.getElementById('listaOverlay').style.display = 'none'; }
+function fecharListaFora(e) { if (e.target === document.getElementById('listaOverlay')) fecharLista(); }
 
 function filtrarLista() {
   listaFiltro = document.getElementById('listaSearch').value.toLowerCase().trim();
-  // Limpa seleção ao filtrar para evitar inconsistências
   selecaoAtiva.clear();
   renderLista();
 }
 
-/* ── Selecionar / desmarcar todas as VISÍVEIS ── */
 function toggleSelectAll(cb) {
-  if (cb.checked) {
-    placasVisiveis.forEach(p => selecaoAtiva.add(p));
-  } else {
-    selecaoAtiva.clear();
-  }
-  // Atualiza checkboxes individuais
+  if (cb.checked) placasVisiveis.forEach(p => selecaoAtiva.add(p));
+  else selecaoAtiva.clear();
   placasVisiveis.forEach(p => {
-    const el = document.getElementById('cb-' + p);
+    const el  = document.getElementById('cb-'+p);
+    const row = document.getElementById('row-'+p);
     if (el) el.checked = cb.checked;
-  });
-  // Atualiza highlight de linha
-  placasVisiveis.forEach(p => {
-    const row = document.getElementById('row-' + p);
     if (row) row.classList.toggle('row-selected', cb.checked);
   });
   atualizarBulkBar();
 }
 
-/* ── Alternar seleção de uma placa individual ── */
 function togglePlaca(p, checked) {
-  if (checked) selecaoAtiva.add(p);
-  else selecaoAtiva.delete(p);
-
-  const row = document.getElementById('row-' + p);
+  if (checked) selecaoAtiva.add(p); else selecaoAtiva.delete(p);
+  const row = document.getElementById('row-'+p);
   if (row) row.classList.toggle('row-selected', checked);
-
   atualizarEstadoCbAll();
   atualizarBulkBar();
 }
 
-/* ── Atualiza o estado do checkbox "selecionar todas" ── */
 function atualizarEstadoCbAll() {
   const cbAll = document.getElementById('cbSelectAll');
   if (!cbAll) return;
   const total = placasVisiveis.length;
   const sel   = placasVisiveis.filter(p => selecaoAtiva.has(p)).length;
-  cbAll.checked = sel === total && total > 0;
+  cbAll.checked   = sel === total && total > 0;
   cbAll.className = sel > 0 && sel < total ? 'indeterminate' : '';
 }
 
-/* ── Exibe/oculta a barra de ações em lote ── */
 function atualizarBulkBar() {
-  const n   = selecaoAtiva.size;
+  const n = selecaoAtiva.size;
   const bar = document.getElementById('bulkBar');
   const lbl = document.getElementById('bulkCount');
-  if (n > 0) {
-    bar.classList.add('visible');
-    lbl.textContent = `${n} placa${n !== 1 ? 's' : ''} selecionada${n !== 1 ? 's' : ''}`;
-  } else {
-    bar.classList.remove('visible');
-  }
+  if (n > 0) { bar.classList.add('visible'); lbl.textContent = `${n} placa${n!==1?'s':''} selecionada${n!==1?'s':''}`; }
+  else bar.classList.remove('visible');
 }
 
-function limparSelecao() {
-  selecaoAtiva.clear();
-  renderLista();
-}
+function limparSelecao() { selecaoAtiva.clear(); renderLista(); }
 
-/* ── Excluir todas as placas selecionadas ── */
 function excluirSelecionadas() {
   const n = selecaoAtiva.size;
   if (!n) return;
-  if (!confirm(`Excluir ${n} placa${n !== 1 ? 's' : ''} permanentemente? Todos os lançamentos serão perdidos.`)) return;
-
+  if (!confirm(`Excluir ${n} placa${n!==1?'s':''} permanentemente?`)) return;
   selecaoAtiva.forEach(p => delete placas[p]);
   selecaoAtiva.clear();
   salvar(); atualizarBadge();
-  toast(`${n} placa${n !== 1 ? 's excluídas' : ' excluída'}`, 'danger');
+  toast(`${n} placa${n!==1?'s excluídas':' excluída'}`, 'danger');
   renderLista();
 }
 
 function renderLista() {
   const tbody = document.getElementById('listaTbody');
   const todas = Object.entries(placas);
-
-  const filtradas = listaFiltro
-    ? todas.filter(([p, d]) =>
-        p.toLowerCase().includes(listaFiltro) ||
-        d.tipo.includes(listaFiltro) ||
-        d.plano.includes(listaFiltro))
-    : todas;
-
-  filtradas.sort((a, b) => a[0].localeCompare(b[0]));
-
+  const filtradas = listaFiltro ? todas.filter(([p,d]) =>
+    p.toLowerCase().includes(listaFiltro) || d.tipo.includes(listaFiltro) || d.plano.includes(listaFiltro)) : todas;
+  filtradas.sort((a,b) => a[0].localeCompare(b[0]));
   placasVisiveis = filtradas.map(([p]) => p);
 
   document.getElementById('listaCountLabel').textContent =
-    `${filtradas.length} / ${todas.length} placa${todas.length !== 1 ? 's' : ''}`;
+    `${filtradas.length} / ${todas.length} placa${todas.length!==1?'s':''}`;
 
-  // Atualiza estado do checkbox "selecionar todas"
   const cbAll = document.getElementById('cbSelectAll');
   if (cbAll) {
     const sel = placasVisiveis.filter(p => selecaoAtiva.has(p)).length;
     cbAll.checked = sel === placasVisiveis.length && placasVisiveis.length > 0;
     cbAll.className = sel > 0 && sel < placasVisiveis.length ? 'indeterminate' : '';
   }
-
   atualizarBulkBar();
 
   if (!filtradas.length) {
-    tbody.innerHTML = `<tr><td colspan="7" class="lista-empty">${listaFiltro ? 'Nenhuma placa encontrada para "' + listaFiltro + '"' : 'Nenhuma placa cadastrada'}</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7" class="lista-empty">${listaFiltro ? 'Nenhuma placa encontrada para "'+listaFiltro+'"' : 'Nenhuma placa cadastrada'}</td></tr>`;
     return;
   }
 
-  tbody.innerHTML = filtradas.map(([p, d]) => {
-    const cor    = PLANO_COR[d.plano] || '#94a3b8';
+  tbody.innerHTML = filtradas.map(([p,d]) => {
+    const planInfo = getPlanoInfo(d.plano);
+    const tipoInfo = getTipoInfo(d.tipo);
+    const cor    = planInfo.cor || '#94a3b8';
     const venceu = cicloVencido(d.ativacao);
     const { fim } = cicloAtual(d.ativacao);
     const checked = selecaoAtiva.has(p) ? 'checked' : '';
     const rowSel  = selecaoAtiva.has(p) ? 'row-selected' : '';
-
     let usosTotal = 0;
     for (const s in d.usos) usosTotal += usosNoCiclo(d.usos[s], d.ativacao).length;
 
-    const tipoIco = { leve:'🚗', moto:'🏍️', caminhao:'🚛', utilitario:'🚐' }[d.tipo] || '🚗';
-
     return `<tr id="row-${p}" class="${rowSel}">
-      <td>
-        <div class="cb-wrap">
-          <input type="checkbox" id="cb-${p}" ${checked} onchange="togglePlaca('${p}', this.checked)">
-        </div>
-      </td>
+      <td><div class="cb-wrap"><input type="checkbox" id="cb-${p}" ${checked} onchange="togglePlaca('${p}',this.checked)"></div></td>
       <td class="td-placa">${p}</td>
-      <td class="td-tipo">${tipoIco} ${cap(d.tipo)}</td>
-      <td><span class="td-plan-badge" style="background:${cor}20;color:${cor};border:1px solid ${cor}40">${d.plano.toUpperCase()}</span></td>
+      <td class="td-tipo">${tipoInfo.ico} ${tipoInfo.nome}</td>
+      <td><span class="td-plan-badge" style="background:${cor}20;color:${cor};border:1px solid ${cor}40">${planInfo.nome.toUpperCase()}</span></td>
       <td class="td-ativ">${fmtData(d.ativacao)}</td>
-      <td class="td-cycle" title="${venceu ? 'Ciclo vencido em ' + fmtDataFull(fim) : 'Ciclo ativo até ' + fmtDataFull(fim)}">
-        <span class="${venceu ? 'cycle-exp' : 'cycle-ok'}"></span>
-        <span style="font-size:9px;color:var(--muted);margin-left:4px;font-family:'Courier New',Courier,monospace">${usosTotal} uso${usosTotal !== 1 ? 's' : ''}</span>
+      <td class="td-cycle" title="${venceu ? 'Ciclo vencido em '+fmtDataFull(fim) : 'Ciclo ativo até '+fmtDataFull(fim)}">
+        <span class="${venceu?'cycle-exp':'cycle-ok'}"></span>
+        <span style="font-size:9px;color:var(--muted);margin-left:4px;font-family:'Courier New',Courier,monospace">${usosTotal} uso${usosTotal!==1?'s':''}</span>
       </td>
-      <td>
-        <div class="td-actions">
-          <button class="act-btn edit"   onclick="editarPlaca('${p}')">✏ Editar</button>
-          <button class="act-btn view"   onclick="consultarDaLista('${p}')">🔍 Consultar</button>
-          <button class="act-btn del"    onclick="excluirPlaca('${p}')">✕ Excluir</button>
-        </div>
-      </td>
+      <td><div class="td-actions">
+        <button class="act-btn edit" onclick="editarPlaca('${p}')">✏ Editar</button>
+        <button class="act-btn view" onclick="consultarDaLista('${p}')">🔍 Consultar</button>
+        <button class="act-btn del"  onclick="excluirPlaca('${p}')">✕ Excluir</button>
+      </div></td>
     </tr>`;
   }).join('');
 }
@@ -1392,51 +1749,55 @@ function renderLista() {
 function editarPlaca(p) {
   document.querySelectorAll('.edit-row').forEach(r => r.remove());
   document.querySelectorAll('.row-editing').forEach(r => r.classList.remove('row-editing'));
-
   const d   = placas[p];
-  const row = document.getElementById('row-' + p);
+  const row = document.getElementById('row-'+p);
   if (!row) return;
   row.classList.add('row-editing');
 
-  const tiposOpts = ['leve','moto','caminhao','utilitario']
-    .map(t => `<option value="${t}" ${d.tipo === t ? 'selected' : ''}>${cap(t)}</option>`).join('');
+  const tipos = getTipos();
+  const tiposOpts = Object.entries(tipos).map(([id,t]) => `<option value="${id}" ${d.tipo===id?'selected':''}>${t.ico} ${t.nome}</option>`).join('');
 
-  const planosOpts = ['ouro','prata','bronze','unico']
-    .map(pl => `<option value="${pl}" ${d.plano === pl ? 'selected' : ''}>${cap(pl)}</option>`).join('');
+  const planosOpts = getPlanosDoTipo(d.tipo).map(pl => {
+    const info = getPlanoInfo(pl);
+    return `<option value="${pl}" ${d.plano===pl?'selected':''}>${info.nome}</option>`;
+  }).join('');
 
   const editRow = document.createElement('tr');
   editRow.className = 'edit-row';
-  editRow.id = 'editrow-' + p;
+  editRow.id = 'editrow-'+p;
   editRow.innerHTML = `
     <td colspan="7">
       <div class="edit-fields">
-        <select id="edit-tipo-${p}">${tiposOpts}</select>
+        <select id="edit-tipo-${p}" onchange="atualizarEditPlano('${p}')">${tiposOpts}</select>
         <select id="edit-plano-${p}">${planosOpts}</select>
         <input type="date" id="edit-data-${p}" value="${d.ativacao}" style="color-scheme:dark">
         <button class="act-btn save"        onclick="salvarEdicao('${p}')">✓ Salvar</button>
         <button class="act-btn cancel-edit" onclick="cancelarEdicao('${p}')">Cancelar</button>
       </div>
     </td>`;
-
   row.after(editRow);
-  document.getElementById('edit-data-' + p).focus();
+  document.getElementById('edit-data-'+p).focus();
+}
+
+function atualizarEditPlano(p) {
+  const tipo = document.getElementById('edit-tipo-'+p).value;
+  const sel  = document.getElementById('edit-plano-'+p);
+  sel.innerHTML = getPlanosDoTipo(tipo).map(pl => {
+    const info = getPlanoInfo(pl);
+    return `<option value="${pl}">${info.nome}</option>`;
+  }).join('');
 }
 
 function salvarEdicao(p) {
-  const tipo   = document.getElementById('edit-tipo-' + p).value;
-  const plano  = document.getElementById('edit-plano-' + p).value;
-  const data   = document.getElementById('edit-data-' + p).value;
-
+  const tipo  = document.getElementById('edit-tipo-'+p).value;
+  const plano = document.getElementById('edit-plano-'+p).value;
+  const data  = document.getElementById('edit-data-'+p).value;
   if (!data) { toast('Informe a data de ativação','warning'); return; }
-
-  const planosDoTipo = Object.keys(PLANOS[tipo]);
-  const planoFinal   = planosDoTipo.includes(plano) ? plano : planosDoTipo[0];
-
+  const planosDoTipo = getPlanosDoTipo(tipo);
   placas[p].tipo     = tipo;
-  placas[p].plano    = planoFinal;
+  placas[p].plano    = planosDoTipo.includes(plano) ? plano : planosDoTipo[0];
   placas[p].ativacao = data;
   salvar();
-
   toast(`${p} atualizada`, 'success');
   cancelarEdicao(p);
   renderLista();
@@ -1444,14 +1805,14 @@ function salvarEdicao(p) {
 }
 
 function cancelarEdicao(p) {
-  const editRow = document.getElementById('editrow-' + p);
+  const editRow = document.getElementById('editrow-'+p);
   if (editRow) editRow.remove();
-  const row = document.getElementById('row-' + p);
+  const row = document.getElementById('row-'+p);
   if (row) row.classList.remove('row-editing');
 }
 
 function excluirPlaca(p) {
-  if (!confirm(`Excluir a placa ${p} permanentemente? Todos os seus lançamentos serão perdidos.`)) return;
+  if (!confirm(`Excluir a placa ${p} permanentemente?`)) return;
   selecaoAtiva.delete(p);
   delete placas[p];
   salvar(); atualizarBadge();
@@ -1482,7 +1843,9 @@ function fecharConsultFora(e) { if (e.target === document.getElementById('consul
 function renderConsult(p) {
   const d = placas[p];
   const { inicio, fim } = cicloAtual(d.ativacao);
-  const cor = PLANO_COR[d.plano] || '#94a3b8';
+  const planInfo = getPlanoInfo(d.plano);
+  const tipoInfo = getTipoInfo(d.tipo);
+  const cor = planInfo.cor || '#94a3b8';
 
   document.getElementById('consultTitle').textContent = `🔍 ${p}`;
 
@@ -1493,55 +1856,47 @@ function renderConsult(p) {
     <div class="consult-plate-header">
       <span class="consult-plate-val">${p}</span>
       <div class="consult-info-col">
-        <div>Tipo: <strong>${cap(d.tipo)}</strong> &nbsp;·&nbsp; Plano: <strong style="color:${cor}">${d.plano.toUpperCase()}</strong></div>
+        <div>Tipo: <strong>${tipoInfo.ico} ${tipoInfo.nome}</strong> &nbsp;·&nbsp; Plano: <strong style="color:${cor}">${planInfo.nome.toUpperCase()}</strong></div>
         <div>Ciclo: <strong>${fmtData(d.ativacao)} → ${fmtDataFull(fim)}</strong></div>
         <div>Usos no ciclo atual: <strong>${totalCiclo}</strong></div>
       </div>
       ${totalCiclo > 0 ? `<button class="consult-clear-all" onclick="clearAllSvc('${p}')">🗑 Zerar tudo</button>` : ''}
     </div>`;
 
-  const svcs = Object.keys(SVC_EM);
-  const blocos = svcs.map(svc => {
-    const lim      = (PLANOS[d.tipo][d.plano] || {})[svc] || 0;
-    const todos    = d.usos[svc] || [];
-    const noCiclo  = usosNoCiclo(todos, d.ativacao);
-    const foraArr  = todos.filter(x => !noCiclo.includes(x));
-    const pct      = lim > 0 ? Math.round((noCiclo.length / lim) * 100) : 0;
+  const blocos = TODOS_SVCS.map(svcObj => {
+    const svc   = svcObj.id;
+    const lim   = getLimite(d.tipo, d.plano, svc);
+    const todos = d.usos[svc] || [];
+    const noCiclo = usosNoCiclo(todos, d.ativacao);
+    const foraArr = todos.filter(x => !noCiclo.includes(x));
     const countColor = noCiclo.length >= lim && lim > 0 ? '#ef4444' : noCiclo.length >= lim - 1 && lim > 0 ? '#f59e0b' : '#22c55e';
 
-    const allEntries = [
-      ...noCiclo.map(iso => ({ iso, inCycle: true })),
-      ...foraArr.map(iso => ({ iso, inCycle: false }))
-    ].sort((a,b) => new Date(b.iso) - new Date(a.iso));
+    const allEntries = [...noCiclo.map(iso=>({iso,inCycle:true})),...foraArr.map(iso=>({iso,inCycle:false}))].sort((a,b)=>new Date(b.iso)-new Date(a.iso));
 
     const entriesHtml = allEntries.length === 0
       ? `<div class="svc-no-entries">Nenhum uso registrado</div>`
-      : allEntries.map((e, i) => {
+      : allEntries.map((e,i) => {
           const dt  = new Date(e.iso);
-          const dts = dt.toLocaleDateString('pt-BR') + ' ' + dt.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+          const dts = dt.toLocaleDateString('pt-BR')+' '+dt.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
           const cycleBadge = e.inCycle
             ? `<span class="entry-cycle" style="background:rgba(34,197,94,.12);color:#22c55e;border:1px solid rgba(34,197,94,.25)">Ciclo atual</span>`
             : `<span class="entry-cycle" style="background:rgba(100,116,139,.1);color:#64748b;border:1px solid rgba(100,116,139,.2)">Ciclo anterior</span>`;
-          return `
-            <div class="svc-entry">
-              <span class="entry-num">${allEntries.length - i}</span>
-              <span class="entry-date">${dts}</span>
-              ${cycleBadge}
-              <button class="entry-del" title="Apagar este lançamento" onclick="deleteEntry('${p}','${svc}','${e.iso}')">✕</button>
-            </div>`;
+          return `<div class="svc-entry">
+            <span class="entry-num">${allEntries.length-i}</span>
+            <span class="entry-date">${dts}</span>${cycleBadge}
+            <button class="entry-del" title="Apagar lançamento" onclick="deleteEntry('${p}','${svc}','${e.iso}')">✕</button>
+          </div>`;
         }).join('');
-
-    const hasAny = todos.length > 0;
 
     return `
       <div class="svc-block" id="svcblock-${svc}">
         <div class="svc-block-hd" onclick="toggleSvcBlock('${svc}')">
-          <span class="svc-block-icon">${SVC_EM[svc]}</span>
-          <span class="svc-block-name">${cap(svc)}</span>
+          <span class="svc-block-icon">${svcObj.ico}</span>
+          <span class="svc-block-name">${svcObj.nome}</span>
           <span class="svc-block-count" style="background:${countColor}18;color:${countColor};border:1px solid ${countColor}30">
-            ${noCiclo.length}${lim > 0 ? '/' + lim : ''} usos
+            ${noCiclo.length}${lim>0?'/'+lim:''} usos
           </span>
-          ${hasAny ? `<button class="svc-block-clear" onclick="event.stopPropagation();clearSvc('${p}','${svc}')">Zerar</button>` : ''}
+          ${todos.length > 0 ? `<button class="svc-block-clear" onclick="event.stopPropagation();clearSvc('${p}','${svc}')">Zerar</button>` : ''}
           <span class="svc-chev">▼</span>
         </div>
         <div class="svc-entries">${entriesHtml}</div>
@@ -1551,16 +1906,12 @@ function renderConsult(p) {
   document.getElementById('consultBody').innerHTML = headerHtml + blocos;
 }
 
-function toggleSvcBlock(svc) {
-  document.getElementById('svcblock-' + svc).classList.toggle('open');
-}
+function toggleSvcBlock(svc) { document.getElementById('svcblock-'+svc).classList.toggle('open'); }
 
 function deleteEntry(p, svc, iso) {
   if (!placas[p] || !placas[p].usos[svc]) return;
   placas[p].usos[svc] = placas[p].usos[svc].filter(x => x !== iso);
-  salvar();
-  toast('Lançamento apagado', 'warning');
-  renderConsult(p);
+  salvar(); toast('Lançamento apagado','warning'); renderConsult(p);
   if (document.getElementById('resultado').innerHTML) renderResFromPlate(p);
 }
 
@@ -1568,30 +1919,23 @@ function clearSvc(p, svc) {
   if (!placas[p]) return;
   if (!confirm(`Zerar todos os usos de "${svc}" para ${p}?`)) return;
   placas[p].usos[svc] = [];
-  salvar();
-  toast(`Usos de ${svc} zerados`, 'warning');
-  renderConsult(p);
-  renderResFromPlate(p);
+  salvar(); toast(`Usos de ${svc} zerados`,'warning'); renderConsult(p); renderResFromPlate(p);
 }
 
 function clearAllSvc(p) {
   if (!placas[p]) return;
-  if (!confirm(`Zerar TODOS os serviços da placa ${p}? Esta ação não pode ser desfeita.`)) return;
+  if (!confirm(`Zerar TODOS os serviços da placa ${p}?`)) return;
   for (const s in placas[p].usos) placas[p].usos[s] = [];
-  salvar();
-  toast(`Todos os usos de ${p} zerados`, 'danger');
-  renderConsult(p);
-  renderResFromPlate(p);
+  salvar(); toast(`Todos os usos de ${p} zerados`,'danger'); renderConsult(p); renderResFromPlate(p);
 }
 
 function renderResFromPlate(p) {
-  const placoEl = document.getElementById('placa');
-  if (placoEl && placoEl.value.toUpperCase().trim() === p && placas[p]) {
-    const d   = placas[p];
-    const svc = svcAtivo;
-    const lim = (PLANOS[d.tipo][d.plano] || {})[svc] || 0;
-    const total = usosNoCiclo(d.usos[svc] || [], d.ativacao).length;
-    renderRes(p, d, svc, total, lim, cicloVencido(d.ativacao) ? 'vencido' : lim === 0 ? 'nd' : 'ok');
+  const el = document.getElementById('placa');
+  if (el && el.value.toUpperCase().trim() === p && placas[p]) {
+    const d = placas[p];
+    const lim = getLimite(d.tipo, d.plano, svcAtivo);
+    const total = usosNoCiclo(d.usos[svcAtivo]||[], d.ativacao).length;
+    renderRes(p, d, svcAtivo, total, lim, cicloVencido(d.ativacao) ? 'vencido' : lim===0 ? 'nd' : 'ok');
   }
 }
 
@@ -1599,18 +1943,17 @@ function exportarCSV() {
   const total = Object.keys(placas).length;
   if (!total) { toast('Nenhuma placa para exportar','warning'); return; }
   let csv = 'placa,tipo,plano,ativacao\n';
-  for (const [p, d] of Object.entries(placas)) csv += `${p},${d.tipo},${d.plano},${d.ativacao}\n`;
+  for (const [p,d] of Object.entries(placas)) csv += `${p},${d.tipo},${d.plano},${d.ativacao}\n`;
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+  a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
   a.download = `placas_${new Date().toISOString().slice(0,10)}.csv`;
-  a.click();
-  URL.revokeObjectURL(a.href);
-  toast(`${total} placas exportadas`, 'success');
+  a.click(); URL.revokeObjectURL(a.href);
+  toast(`${total} placas exportadas`,'success');
 }
 
-/* ═══════════════════════════════════════════
+/* ═══════════════════════════════════════
    HISTÓRICO
-═══════════════════════════════════════════ */
+═══════════════════════════════════════ */
 function addHist(p, s) {
   const t = new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
   hist.unshift({p,s,t});
@@ -1622,35 +1965,37 @@ function addHist(p, s) {
 function renderHist() {
   const el = document.getElementById('hlist');
   if (!hist.length) { el.innerHTML = '<div class="empty">Nenhum atendimento registrado ainda</div>'; return; }
+  const svcIco = Object.fromEntries(TODOS_SVCS.map(s => [s.id, s.ico]));
   el.innerHTML = hist.map(h=>`
     <div class="hist-item">
       <span class="hplate">${h.p}</span>
-      <span class="hsvc">${SVC_EM[h.s]||'?'} ${h.s}</span>
+      <span class="hsvc">${svcIco[h.s]||'?'} ${h.s}</span>
       <span class="htime">${h.t}</span>
     </div>`).join('');
 }
 
-function limparHist() {
-  hist = []; localStorage.removeItem('hist');
-  renderHist(); toast('Histórico limpo','warning');
-}
+function limparHist() { hist=[]; localStorage.removeItem('hist'); renderHist(); toast('Histórico limpo','warning'); }
 
-/* ═══════════════════════════════════════════
+/* ═══════════════════════════════════════
    UTILS
-═══════════════════════════════════════════ */
-function salvar()       { localStorage.setItem('placas', JSON.stringify(placas)); }
+═══════════════════════════════════════ */
+function salvar() { localStorage.setItem('placas', JSON.stringify(placas)); }
+
 function atualizarBadge() {
   const n = Object.keys(placas).length;
   document.getElementById('badgePlacas').textContent = `${n.toLocaleString('pt-BR')} placa${n!==1?'s':''}`;
 }
+
 function toast(msg, type='success') {
   const c = document.getElementById('toasts');
   const el = document.createElement('div');
   el.className = `toast toast-${type}`;
-  el.innerHTML = `<span>${{success:'✓',danger:'✕',warning:'⚠'}[type]||'·'}</span> ${msg}`;
+  const icons = {success:'✓',danger:'✕',warning:'⚠',info:'ℹ'};
+  el.innerHTML = `<span>${icons[type]||'·'}</span> ${msg}`;
   c.appendChild(el);
   setTimeout(()=>{ el.classList.add('out'); setTimeout(()=>el.remove(),220); },3200);
 }
+
 function cap(s)         { return s.charAt(0).toUpperCase()+s.slice(1); }
 function fmtData(iso)   { const [y,m,d]=iso.split('-'); return `${d}/${m}/${y}`; }
 function fmtDataFull(dt){ return dt.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric'}); }
